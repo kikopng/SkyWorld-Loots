@@ -55,7 +55,6 @@
             text-align: center;
         }
 
-        /* Header & Nav */
         header {
             margin-bottom: 40px;
             border-bottom: 2px solid var(--neon-purple);
@@ -105,7 +104,13 @@
             color: var(--bg-color);
             box-shadow: 0 0 15px var(--neon-blue);
         }
-        
+
+        /* Active page highlight */
+        .active-btn {
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+        }
+
         /* Player Grid Styles */
         .player-grid {
             display: grid;
@@ -164,9 +169,10 @@
             <a href="index.html" class="nav-btn">Home</a>
             <a href="scoreboard.html" class="nav-btn">Scoreboard</a>
             <a href="gamerules.html" class="nav-btn">Game Rules</a>
+            <a href="themepark.html" class="nav-btn">Theme Park</a>
             <a href="prize.html" class="nav-btn">Prize Pools</a>
-            <a href="wish.html" class="nav-btn" style="border-color: var(--neon-pink); color: var(--neon-pink);">Secret Santa</a>
-            <a href="#" class="nav-btn">Others</a>
+            <a href="wish.html" class="nav-btn active-btn">Secret Santa</a>
+            <a href="others.html" class="nav-btn">Others</a>
         </nav>
     </header>
 
@@ -176,7 +182,6 @@
 </div>
 
 <script>
-    // List of player names, which correspond exactly to the PDF file names (excluding .pdf)
     const playerNames = [
         'Eunice',
         'Helen',
@@ -202,16 +207,13 @@
         const grid = document.getElementById('player-wishlist-grid');
         
         playerNames.forEach(name => {
-            // Construct the full file path. 
-            // We use encodeURIComponent to handle spaces and dots in the filename correctly for URLs.
             const encodedFileName = encodeURIComponent(name + '.pdf');
             const filePath = `Wish/${encodedFileName}`;
 
             const button = document.createElement('a');
             button.className = 'player-btn';
-            // Use href to link directly to the PDF file, opening it in a new tab
             button.href = filePath;
-            button.target = '_blank'; // Opens in a new tab/window
+            button.target = '_blank';
             button.textContent = name.toUpperCase();
             
             grid.appendChild(button);
