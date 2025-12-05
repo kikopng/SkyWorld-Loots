@@ -257,14 +257,16 @@
         <div class="subtitle">LEVEL: GENTING HIGHLANDS // 11-12 DEC 2025</div>
         <div style="margin-top: 10px; color: #fff; font-size: 0.8rem;">HOSTS: JAYCE & SELINA</div>
 
+        <!-- UPDATED NAVIGATION LINKS -->
         <nav>
             <a href="#" class="nav-btn">Home</a>
-            <a href="#" class="nav-btn">Scoreboard</a>
-            <a href="https://www.gentingskyworlds.com/en/rules-regulations.html" target="_blank" class="nav-btn">Game Rules</a>
-            <a href="#" class="nav-btn">Prize Pools</a>
-            <a href="#" class="nav-btn">Secret Santa</a>
-            <a href="#" class="nav-btn">Others</a>
+            <a href="scoreboard.html" class="nav-btn">Scoreboard</a>
+            <a href="gamerules.html" class="nav-btn">Game Rules</a>
+            <a href="prize.html" class="nav-btn">Prize Pools</a>
+            <a href="wish.html" class="nav-btn">Secret Santa</a>
+            <a href="others.html" class="nav-btn">Others</a>
         </nav>
+        <!-- END UPDATED NAVIGATION LINKS -->
     </header>
 
     <div class="itinerary-box">
@@ -421,7 +423,9 @@
             for (let attempt = 0; attempt < maxRetries; attempt++) {
                 try {
                     // Using the fixed model name gemini-2.5-flash
-                    response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`, {
+                    // NOTE: The previous code was using 'gemini-2.5-flash' which is not the preview model. 
+                    // I am updating it to the recommended preview model for consistent API usage.
+                    response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
