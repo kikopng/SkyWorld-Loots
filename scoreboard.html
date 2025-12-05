@@ -15,6 +15,8 @@
             --bg-color: #050505;
             --text-color: #ffffff;
             --terminal-green: #0f0;
+            --sheet-scale-desktop: 0.75; /* desktop/tablet */
+            --sheet-scale-mobile: 0.55;  /* mobile phones */
         }
 
         * {
@@ -109,36 +111,59 @@
             color: var(--neon-pink);
         }
 
+        /* Scoreboard iframe scaling */
         .scoreboard-container {
             border: 4px solid var(--terminal-green);
             background-color: rgba(0, 0, 0, 0.8);
             box-shadow: 0 0 30px var(--terminal-green);
-            padding: 5px;
             border-radius: 8px;
             overflow: hidden;
-            height: 210vh;
-            min-height: 1200px;
-            max-width: 100%;
+            position: relative;
+            height: 75vh;
+            max-height: 1100px;
+            min-height: 380px;
+            padding: 0;
+        }
+
+        .iframe-wrapper {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         #google-sheet-iframe {
-            width: 100%;
-            height: 100%;
+            --scale: var(--sheet-scale-desktop);
+            width: calc(100% / var(--scale));
+            height: calc(100% / var(--scale));
             border: none;
+            transform: scale(var(--scale));
+            transform-origin: 0 0;
+            display: block;
             background-color: #000;
-        }
-
-        #status-message {
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: var(--neon-purple);
         }
 
         @media (max-width: 600px) {
             h1 { font-size: 1.5rem; }
             .subtitle { font-size: 0.9rem; }
             .nav-btn { width: 100%; margin-bottom: 5px; }
-            .scoreboard-container { height: 160vh; min-height: 900px; }
+            .scoreboard-container {
+                height: 85vh;
+                min-height: 480px;
+            }
+            #google-sheet-iframe {
+                --scale: var(--sheet-scale-mobile);
+                width: calc(100% / var(--scale));
+                height: calc(100% / var(--scale));
+            }
+        }
+
+        #status-message {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: var(--neon-purple);
         }
     </style>
 </head>
@@ -163,11 +188,14 @@
     </header>
 
     <div class="scoreboard-container">
-        <iframe 
-            id="google-sheet-iframe" 
-            src="https://docs.google.com/spreadsheets/d/e/2PACX-1vShFGBBJoJcmTZjGvN4T6nWve1VocnyENukSihj5LnlZMm3PU5s4eKLmE3uW07YJG7Det1LErGrAPUz/pubhtml?gid=1037652140&single=true&widget=true&headers=false"
-            frameborder="0">
-        </iframe>
+        <div class="iframe-wrapper">
+            <iframe 
+                id="google-sheet-iframe" 
+                src="https://docs.google.com/spreadsheets/d/e/2PACX-1vShFGBBJoJcmTZjGvN4T6nWve1VocnyENukSihj5LnlZMm3PU5s4eKLmE3uW07YJG7Det1LErGrAPUz/pubhtml?gid=1037652140&single=true&widget=true&headers=false"
+                allowfullscreen
+                scrolling="no">
+            </iframe>
+        </div>
     </div>
 
     <div id="status-message">
