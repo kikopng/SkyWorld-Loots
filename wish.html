@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLAYER WISHLISTS | SKYWORLD LOOTS</title>
+    <!-- Google Fonts for Retro Arcade Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-blue: #00ffff;
+            --neon-purple: #bc13fe;
+            --bg-color: #050505;
+            --text-color: #ffffff;
+            --terminal-green: #0f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Orbitron', sans-serif;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            min-height: 100vh;
+        }
+
+        /* Scanline Effect */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Header & Nav */
+        header {
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--neon-purple);
+            padding-bottom: 20px;
+            box-shadow: 0 0 15px var(--neon-purple);
+        }
+
+        h1 {
+            font-family: 'Press Start 2P', cursive;
+            color: var(--neon-pink);
+            text-shadow: 2px 2px var(--neon-blue), 0 0 20px var(--neon-pink);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .subtitle {
+            color: var(--neon-blue);
+            letter-spacing: 3px;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        nav {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 10px 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .nav-btn:hover {
+            background: var(--neon-blue);
+            color: var(--bg-color);
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+        
+        /* Player Grid Styles */
+        .player-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .player-btn {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid var(--neon-purple);
+            color: var(--terminal-green);
+            padding: 15px 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: 0.3s;
+            border-radius: 6px;
+            box-shadow: 0 0 10px var(--neon-purple);
+            display: block;
+            text-align: center;
+        }
+
+        .player-btn:hover {
+            background: var(--neon-pink);
+            color: var(--bg-color);
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 20px var(--neon-pink);
+            transform: scale(1.05);
+        }
+
+        .player-btn:active {
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.5rem; }
+            .subtitle { font-size: 0.9rem; }
+            .nav-btn { width: 100%; margin-bottom: 5px;}
+            .player-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="scanlines"></div>
+
+<div class="container">
+    <header>
+        <h1>WISH LIST ACCESS</h1>
+        <div class="subtitle">VIEW PLAYER PDF WISHES</div>
+
+        <nav>
+            <a href="index.html" class="nav-btn">Home</a>
+            <a href="scoreboard.html" class="nav-btn">Scoreboard</a>
+            <a href="gamerules.html" class="nav-btn">Game Rules</a>
+            <a href="prize.html" class="nav-btn">Prize Pools</a>
+            <a href="wish.html" class="nav-btn" style="border-color: var(--neon-pink); color: var(--neon-pink);">Secret Santa</a>
+            <a href="#" class="nav-btn">Others</a>
+        </nav>
+    </header>
+
+    <div id="player-wishlist-grid" class="player-grid">
+        <!-- Player buttons will be inserted here by JavaScript -->
+    </div>
+</div>
+
+<script>
+    // List of player names, which correspond exactly to the PDF file names (excluding .pdf)
+    const playerNames = [
+        'Eunice',
+        'Helen',
+        'Jayce',
+        'Jeswin',
+        'Jia Nian',
+        'Jie Xin',
+        'Kelly',
+        'Kitayama MD',
+        'Kok Meng',
+        'Mr. Kelvin',
+        'Ms. Lee',
+        'Ms. Yeoh',
+        'Naqi',
+        'Phui Ling',
+        'Selina',
+        'Stephanie',
+        'Wallace',
+        'Ying'
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const grid = document.getElementById('player-wishlist-grid');
+        
+        playerNames.forEach(name => {
+            // Construct the full file path. 
+            // We use encodeURIComponent to handle spaces and dots in the filename correctly for URLs.
+            const encodedFileName = encodeURIComponent(name + '.pdf');
+            const filePath = `Wish/${encodedFileName}`;
+
+            const button = document.createElement('a');
+            button.className = 'player-btn';
+            // Use href to link directly to the PDF file, opening it in a new tab
+            button.href = filePath;
+            button.target = '_blank'; // Opens in a new tab/window
+            button.textContent = name.toUpperCase();
+            
+            grid.appendChild(button);
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRIZE POOLS | SKYWORLD LOOTS</title>
+    <!-- Google Fonts for Retro Arcade Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-blue: #00ffff;
+            --neon-purple: #bc13fe;
+            --bg-color: #050505;
+            --text-color: #ffffff;
+            --terminal-green: #0f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Orbitron', sans-serif;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            min-height: 100vh;
+        }
+
+        /* Scanline Effect */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Header & Nav */
+        header {
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--neon-purple);
+            padding-bottom: 20px;
+            box-shadow: 0 0 15px var(--neon-purple);
+        }
+
+        h1 {
+            font-family: 'Press Start 2P', cursive;
+            color: var(--neon-blue);
+            text-shadow: 2px 2px var(--neon-pink), 0 0 20px var(--neon-blue);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .subtitle {
+            color: var(--neon-pink);
+            letter-spacing: 3px;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        nav {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 10px 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .nav-btn:hover {
+            background: var(--neon-blue);
+            color: var(--bg-color);
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+        
+        /* Prize Grid Styles */
+        .prize-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            padding: 20px 0;
+        }
+
+        .prize-item {
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--neon-purple);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 0 15px var(--neon-purple);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: center;
+        }
+
+        .prize-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px var(--neon-pink);
+        }
+
+        .prize-rank {
+            font-family: 'Press Start 2P', cursive;
+            color: var(--neon-blue);
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+
+        .prize-name {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--terminal-green);
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            /* Added text shadow for better readability */
+            text-shadow: 0 0 5px rgba(15, 255, 0, 0.6); 
+        }
+
+        .prize-image-container {
+            border: 2px solid var(--neon-pink);
+            border-radius: 4px;
+            overflow: hidden;
+            width: 100%;
+            height: 180px; /* Fixed height for visual consistency */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #1a001a;
+            box-shadow: inset 0 0 10px var(--neon-pink);
+            cursor: pointer; /* Indicate that the container is clickable */
+        }
+
+        .prize-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s;
+            pointer-events: none; /* Allows click event to pass to container */
+        }
+        
+        /* Fallback styling for missing images */
+        .prize-image-container img[src*="placehold"] {
+            object-fit: contain;
+            padding: 10px;
+        }
+
+        /* --- MODAL STYLES (Lightbox) --- */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.95); /* Semi-transparent black background */
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            margin: 15% auto; /* 15% from the top and centered */
+            width: 90%; 
+            max-width: 700px;
+            position: relative;
+            background-color: var(--bg-color);
+            border: 3px solid var(--neon-blue);
+            box-shadow: 0 0 30px var(--neon-blue);
+            padding: 20px;
+            border-radius: 10px;
+            animation: zoomIn 0.3s;
+        }
+        
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 4px;
+        }
+
+        .modal-caption {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-pink);
+            padding: 10px 0;
+            text-align: center;
+            font-size: 1rem;
+            text-shadow: 0 0 5px var(--neon-pink);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            color: var(--neon-pink);
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 0 10px;
+            border: 2px solid var(--neon-pink);
+            background-color: var(--bg-color);
+            border-radius: 50%;
+            line-height: 1.2;
+            transition: 0.3s;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: var(--neon-blue);
+            text-decoration: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.5rem; }
+            .subtitle { font-size: 0.9rem; }
+            .nav-btn { width: 100%; margin-bottom: 5px;}
+            .prize-grid { grid-template-columns: 1fr; }
+            .modal-content { margin: 30% auto; max-width: 95%;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="scanlines"></div>
+
+<div class="container">
+    <header>
+        <h1>PRIZE POOL</h1>
+        <div class="subtitle">17 LOOTS TO BE AWARDED // MAXIMUM REWARD</div>
+
+        <nav>
+            <a href="index.html" class="nav-btn">Home</a>
+            <a href="scoreboard.html" class="nav-btn">Scoreboard</a>
+            <a href="gamerules.html" class="nav-btn">Game Rules</a>
+            <a href="prize.html" class="nav-btn" style="border-color: var(--neon-pink); color: var(--neon-pink);">Prize Pools</a>
+            <a href="#" class="nav-btn">Secret Santa</a>
+            <a href="#" class="nav-btn">Others</a>
+        </nav>
+    </header>
+
+    <!-- The prize grid content will be dynamically inserted here by JavaScript -->
+    <div id="prize-grid" class="prize-grid">
+        <!-- Dynamic content goes here -->
+    </div>
+</div>
+
+<!-- Prize Image Modal (Lightbox) -->
+<div id="prizeModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <img id="modalImage" src="" alt="Enlarged Prize Image">
+        <div id="modalCaption" class="modal-caption"></div>
+    </div>
+</div>
+
+<script>
+    // Array of your exact image file names (including spaces and capitalization).
+    // The script will use these names for both the file path and the display name.
+    const prizeFiles = [
+        '43 Inch TV.jpg', 
+        'Air Fryer.jpg',
+        'Air Purifier.jpg',
+        'Bear Cooker.jpg',
+        'Bear Oven.jpg',
+        'Mystery Gift A.jpg',
+        'Mystery Gift B.jpg',
+        'Oppo Tab SE.jpg',
+        'Premium Combo.jpg',
+        'Premium Earbud.jpg',
+        'Robot Vacuum.jpg',
+        'Small Fridge.jpg',
+        'Smart Speaker.jpg',
+        'Smart Watch.jpg',
+        'Sony Speaker.jpg',
+        'Vacuum Cleaner 1.jpg',
+        'Vacuum Cleaner 2.jpg',
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const prizeGrid = document.getElementById('prize-grid');
+        const modal = document.getElementById('prizeModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalCaption = document.getElementById('modalCaption');
+        const closeBtn = document.querySelector('.close-btn');
+        
+        // --- Dynamic Content Generation ---
+        prizeFiles.forEach((fileName, index) => {
+            const rank = index + 1;
+            // IMPORTANT: Use encodeURIComponent for filenames with spaces/special characters in the URL path
+            const encodedFileName = fileName.split('/').map(segment => encodeURIComponent(segment)).join('/');
+            const fullPath = `Prize/${encodedFileName}`;
+            
+            // Function to convert file name to display name:
+            const baseName = fileName.replace(/\.[^/.]+$/, ""); // Remove extension
+            const displayName = baseName.toUpperCase();
+            
+            // Create a version for the placeholder text (replacing spaces with + for URL)
+            const placeholderText = displayName.replace(/ /g, '+');
+
+            const itemHTML = `
+                <div class="prize-item">
+                    <div class="prize-rank">RANK ${rank}</div>
+                    <h3 class="prize-name">${displayName}</h3>
+                    <div class="prize-image-container" data-src="${fullPath}" data-alt="${displayName}">
+                        <img 
+                            src="${fullPath}" 
+                            alt="${displayName}" 
+                            onerror="this.onerror=null; this.src='https://placehold.co/400x180/ff00ff/050505?text=IMAGE+FOR+${placeholderText}+MISSING'"
+                        >
+                    </div>
+                </div>
+            `;
+            
+            prizeGrid.innerHTML += itemHTML;
+        });
+        
+        // --- Modal Functions ---
+
+        // Function to open the modal
+        function openModal(src, alt) {
+            modalImage.src = src;
+            modalCaption.textContent = alt;
+            modal.style.display = 'block';
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        // Close when clicking the 'X' button
+        closeBtn.onclick = closeModal;
+
+        // Close when clicking outside the modal content
+        modal.onclick = (event) => {
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+
+        // Attach click listener using Event Delegation to the prize grid container
+        prizeGrid.addEventListener('click', (event) => {
+            let container = event.target.closest('.prize-image-container');
+            
+            if (container) {
+                const src = container.getAttribute('data-src');
+                const alt = container.getAttribute('data-alt');
+                if (src && alt) {
+                    openModal(src, alt);
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

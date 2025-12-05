@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTHERS | UNDER MAINTENANCE</title>
+    <!-- Google Fonts for Retro Arcade Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-blue: #00ffff;
+            --neon-purple: #bc13fe;
+            --bg-color: #050505;
+            --text-color: #ffffff;
+            --terminal-green: #0f0;
+            --warning-red: #ff3333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Orbitron', sans-serif;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            min-height: 100vh;
+        }
+
+        /* Scanline Effect */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Header & Nav */
+        header {
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--neon-purple);
+            padding-bottom: 20px;
+            box-shadow: 0 0 15px var(--neon-purple);
+        }
+
+        h1 {
+            font-family: 'Press Start 2P', cursive;
+            color: var(--neon-pink);
+            text-shadow: 2px 2px var(--neon-blue), 0 0 20px var(--neon-pink);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .subtitle {
+            color: var(--neon-blue);
+            letter-spacing: 3px;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        nav {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 10px 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .nav-btn:hover {
+            background: var(--neon-blue);
+            color: var(--bg-color);
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+        
+        /* Maintenance Section */
+        .maintenance-box {
+            border: 3px dashed var(--warning-red);
+            padding: 30px;
+            margin: 40px auto;
+            max-width: 800px;
+            background-color: rgba(50, 0, 0, 0.4);
+            box-shadow: 0 0 20px var(--warning-red);
+            border-radius: 8px;
+        }
+
+        .maintenance-text {
+            font-family: 'Press Start 2P', cursive;
+            color: var(--warning-red);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .status-message {
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        /* --- Reaction Game Styles --- */
+        .game-area {
+            margin-top: 50px;
+            padding: 20px;
+            border: 2px solid var(--neon-purple);
+            background-color: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 15px var(--neon-purple);
+            border-radius: 8px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .game-title {
+            color: var(--terminal-green);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--terminal-green);
+        }
+
+        #reaction-box {
+            width: 90%;
+            height: 250px;
+            margin: 20px auto;
+            background-color: #222;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.1s;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            user-select: none;
+            border: 3px solid #444;
+            box-shadow: inset 0 0 10px #000;
+        }
+
+        /* Reaction Box States */
+        .state-ready {
+            color: var(--neon-blue);
+            text-shadow: 0 0 8px var(--neon-blue);
+        }
+
+        .state-wait {
+            color: var(--neon-purple);
+            text-shadow: 0 0 8px var(--neon-purple);
+        }
+
+        .state-go {
+            background-color: var(--terminal-green) !important;
+            color: var(--bg-color);
+            text-shadow: 0 0 15px var(--text-color);
+            border-color: var(--terminal-green) !important;
+            box-shadow: 0 0 30px var(--terminal-green), inset 0 0 10px #000;
+        }
+        
+        .state-too-soon {
+            background-color: var(--warning-red) !important;
+            color: var(--bg-color);
+            text-shadow: 0 0 15px var(--text-color);
+            border-color: var(--warning-red) !important;
+            box-shadow: 0 0 30px var(--warning-red), inset 0 0 10px #000;
+        }
+
+        /* Results Display */
+        #results {
+            margin-top: 15px;
+            color: var(--neon-pink);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9rem;
+            min-height: 20px;
+        }
+
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.5rem; }
+            .subtitle { font-size: 0.9rem; }
+            .nav-btn { width: 100%; margin-bottom: 5px;}
+            .maintenance-text { font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="scanlines"></div>
+
+<div class="container">
+    <header>
+        <h1>OTHERS</h1>
+        <div class="subtitle">MISCELLANEOUS DATA AND DIVERSIONS</div>
+
+        <nav>
+            <a href="index.html" class="nav-btn">Home</a>
+            <a href="scoreboard.html" class="nav-btn">Scoreboard</a>
+            <a href="gamerules.html" class="nav-btn">Game Rules</a>
+            <a href="prize.html" class="nav-btn">Prize Pools</a>
+            <a href="wish.html" class="nav-btn">Secret Santa</a>
+            <a href="others.html" class="nav-btn" style="border-color: var(--neon-pink); color: var(--neon-pink);">Others</a>
+        </nav>
+    </header>
+
+    <!-- Under Maintenance Section -->
+    <div class="maintenance-box">
+        <div class="maintenance-text">// WARNING // SYSTEM ACCESS LEVEL 4 REQUIRED</div>
+        <div class="maintenance-text">SECTION UNDERGOING RECALIBRATION</div>
+        <p class="status-message">This section is currently under maintenance. Please check back later for updates and new features!</p>
+    </div>
+
+    <!-- Mini Game Section: Neon Reaction Game -->
+    <div class="game-area">
+        <div class="game-title">>>> INITIATE REFLEX TEST // NEON ARCADE GAME <<<</div>
+        
+        <div id="reaction-box" class="state-ready">
+            CLICK TO START
+        </div>
+
+        <div id="results"></div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const reactionBox = document.getElementById('reaction-box');
+        const resultsDisplay = document.getElementById('results');
+        
+        let startTime;
+        let timeoutId;
+        let isWaiting = false;
+        let isReady = false;
+
+        // Reset the game state and display the ready prompt
+        function resetGame() {
+            clearTimeout(timeoutId);
+            reactionBox.className = 'state-ready';
+            reactionBox.textContent = 'CLICK TO START';
+            resultsDisplay.textContent = 'Awaiting input...';
+            isWaiting = false;
+            isReady = false;
+        }
+
+        // Start the game logic
+        function startGame() {
+            // 1. Set state to "WAIT"
+            isWaiting = true;
+            isReady = false;
+            reactionBox.className = 'state-wait';
+            reactionBox.textContent = 'WAIT FOR GREEN...';
+            resultsDisplay.textContent = '...DO NOT CLICK YET...';
+
+            // 2. Set a random delay (2 to 7 seconds)
+            const delay = Math.random() * 5000 + 2000; // 2000ms (2s) to 7000ms (7s)
+
+            // 3. Set the timeout for the "GO" state
+            timeoutId = setTimeout(goState, delay);
+        }
+
+        // Transition to the "GO" state
+        function goState() {
+            isReady = true;
+            startTime = performance.now(); // Record the exact time the box turns green
+            reactionBox.className = 'state-go';
+            reactionBox.textContent = '!!! GO !!!';
+        }
+
+        // Handle the user's click
+        reactionBox.addEventListener('click', () => {
+            if (isReady) {
+                // User clicked when it was green (GO state)
+                const endTime = performance.now();
+                const reactionTime = (endTime - startTime).toFixed(3); // Time in milliseconds
+
+                reactionBox.className = 'state-ready'; // Reset visual
+                reactionBox.textContent = 'RESULT';
+                resultsDisplay.textContent = `REACTION TIME: ${reactionTime} ms`;
+                
+                // Reset to start mode after a brief pause
+                setTimeout(resetGame, 2000); 
+
+            } else if (isWaiting) {
+                // User clicked too early (WAIT state)
+                clearTimeout(timeoutId); // Stop the green box from appearing
+                reactionBox.className = 'state-too-soon';
+                reactionBox.textContent = 'TOO SOON!';
+                resultsDisplay.textContent = 'PENALTY: -500MS. WAIT FOR GREEN LIGHT.';
+                
+                // Reset to start mode after a brief pause
+                isWaiting = false;
+                setTimeout(resetGame, 3000); 
+
+            } else {
+                // User clicked the start button (READY state)
+                startGame();
+            }
+        });
+
+        // Initialize game on load
+        resetGame();
+    });
+</script>
+
+</body>
+</html>
