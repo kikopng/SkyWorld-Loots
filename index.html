@@ -143,7 +143,7 @@
             letter-spacing: 1px;
         }
 
-        /* Chatbot Section - UI Improvements for Readability */
+        /* Chatbot Section */
         .chatbot-container {
             margin-top: 50px;
             border: 4px solid var(--terminal-green);
@@ -171,7 +171,7 @@
             padding: 20px;
             text-align: left;
             font-family: 'Orbitron', monospace;
-            font-size: 1rem; /* Increased font size for readability */
+            font-size: 1rem;
             color: var(--terminal-green);
             display: flex;
             flex-direction: column;
@@ -181,19 +181,18 @@
         .message {
             padding: 10px;
             border-radius: 5px;
-            max-width: 85%; /* Slightly wider messages */
+            max-width: 85%;
         }
 
-        /* High-Contrast Chat Message Styles */
         .bot-msg {
-            background: transparent; /* Changed to transparent for better visibility */
+            background: transparent;
             border-left: 3px solid var(--terminal-green);
             align-self: flex-start;
             color: var(--terminal-green);
         }
 
         .user-msg {
-            background: transparent; /* Changed to transparent for better visibility */
+            background: transparent;
             border-right: 3px solid var(--neon-blue);
             color: var(--neon-blue);
             align-self: flex-end;
@@ -229,7 +228,6 @@
             background: #fff;
         }
 
-        /* Scrollbar for chat */
         .chat-display::-webkit-scrollbar {
             width: 8px;
         }
@@ -262,6 +260,7 @@
             <a href="#" class="nav-btn">Home</a>
             <a href="scoreboard.html" class="nav-btn">Scoreboard</a>
             <a href="gamerules.html" class="nav-btn">Game Rules</a>
+            <a href="themepark.html" class="nav-btn">Theme Park</a>
             <a href="prize.html" class="nav-btn">Prize Pools</a>
             <a href="wish.html" class="nav-btn">Secret Santa</a>
             <a href="others.html" class="nav-btn">Others</a>
@@ -309,7 +308,7 @@
         </div>
         <div class="chat-display" id="chat-display">
             <div class="message bot-msg">
-                Greetings, Player! I am the automated consciousness of Host Jayce. I track the mission for Day 1 (11/12/2025). Ask me where you should be, what items you need, or **where to gather for lunch**!
+                Greetings, Player! I am the automated consciousness of Host Jayce. I track the mission for Day 1 (11/12/2025). Ask me where you should be, what items you need, or <b>where to gather for lunch</b>!
             </div>
         </div>
         <div class="chat-input-area">
@@ -320,17 +319,13 @@
 </div>
 
 <script>
-    // --- CONFIGURATION ---
-    // API Key split as requested for demonstration purposes (Placeholder Key)
     const API_A = "AIzaSyADV6D3Lzl5piE";
     const API_B = "MdcTg2dcj30H-A-rEyP8"; 
     const API_KEY = API_A + API_B;
 
-    // --- CHATBOT LOGIC ---
     const chatDisplay = document.getElementById('chat-display');
     const userInput = document.getElementById('user-input');
 
-    // Knowledge Base for the Bot
     const eventContext = `
     You are a helpful, clear, and direct automated assistant named "Jayce Host".
     Your purpose is to assist participants of the "SkyWorld Loots" company trip with their schedule.
@@ -351,31 +346,29 @@
     - BRIEFING: By Jayce and Selina at entrance.
     - 10:00 AM: Enter Theme Park. Group Photo.
     - LOCKERS: Located in Andromeda Base. Rent one immediately.
-    - 10:30 AM - 12:00 PM: Free & Easy (Suggestion: Do 'Photo Target' game now).
+    - 10:30 AM - 12:00 PM: Free & Easy.
     - 12:00 PM: Gather at lockers, walk to Buck Café.
     - LUNCH: Allowance RM35 was given on 10/12/2025.
     - 12:50 PM: Mini Game "Animal Tag".
     - 1:00 PM - 4:00 PM: Free & Easy.
-    - 4:00 PM: Gather at Central Park Garden (refer map if lost).
+    - 4:00 PM: Gather at Central Park Garden.
     - 4:00 PM - 4:30 PM: "Pair Up" Game.
     - 4:30 PM: Exit park. Collect backpacks/luggage.
-    - 5:00 PM: Check-in First World Hotel. Rest.
+    - 5:00 PM: Check-in First World Hotel.
     - 6:00 PM: Gather at Lobby. Dinner at Burger & Lobster.
 
-    GAMES: 6 Total (Hand Sign, Animal tag, Pair up, Photo target, Question, Creative photo). Rules sent on 10/12.
+    GAMES: 6 Total.
 
     SECRET SANTA:
     - Gifts brought to office on 9/12.
     - Exchange happens during Annual Dinner.
-    - Wishlists are viewable on the website.
 
     YOUR BEHAVIOR:
-    1. **Crucial Rule:** Your responses must be extremely concise, direct, and brief. Never write more than 3 sentences.
-    2. Reply ONLY to questions regarding the Day 1 Itinerary (11/12/2025).
-    3. If asked about something else, politely state that you can only provide information on the Day 1 schedule.
-    4. If you don't know the answer, state that the data is unavailable and suggest contacting the hosts (Jayce or Selina).
-    5. Always check the "Current User Time" provided below to advise them on what they should be doing NOW.
-    6. If the Current User Time is NOT 11 Dec 2025, note the date difference but still provide the factual answer for the 11th.
+    1. VERY SHORT answers (max 3 sentences).
+    2. Only answer Day 1 Itinerary questions.
+    3. If asked something else: say you can only provide Day 1 details.
+    4. If unknown: tell them data unavailable, ask hosts.
+    5. Compare with current Malaysia time when answering.
     `;
 
     function handleEnter(event) {
@@ -388,25 +381,21 @@
         const text = userInput.value.trim();
         if (!text) return;
 
-        // Add user message to chat
         appendMessage(text, 'user-msg');
         userInput.value = '';
 
-        // Prepare context with REAL-TIME data
         const now = new Date();
         const malaysiaTime = now.toLocaleString("en-US", {timeZone: "Asia/Kuala_Lumpur"});
         
-        // Construct the prompt
         const prompt = `
         ${eventContext}
         
         CURRENT USER TIME (Malaysia): ${malaysiaTime}
         USER QUESTION: ${text}
-        
+
         Based on the CURRENT USER TIME, advise them on their status in the timeline if relevant.
         `;
 
-        // Show loading state 
         const loadingDiv = document.createElement('div');
         loadingDiv.className = 'message bot-msg';
         loadingDiv.textContent = 'Processing request...';
@@ -415,74 +404,36 @@
         chatDisplay.scrollTop = chatDisplay.scrollHeight;
 
         try {
-            // Implement simple exponential backoff for robustness
-            const maxRetries = 3;
-            let response = null;
-            let data = null;
-            
-            for (let attempt = 0; attempt < maxRetries; attempt++) {
-                try {
-                    // Using the fixed model name gemini-2.5-flash
-                    // NOTE: The previous code was using 'gemini-2.5-flash' which is not the preview model. 
-                    // I am updating it to the recommended preview model for consistent API usage.
-                    response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            contents: [{
-                                parts: [{
-                                    text: prompt
-                                }]
-                            }]
-                        })
-                    });
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }]
+                })
+            });
 
-                    if (response.ok) {
-                        data = await response.json();
-                        break; // Success
-                    } else if (attempt < maxRetries - 1) {
-                        // Wait before retrying (exponential backoff)
-                        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
-                    } else {
-                        throw new Error(`API failed after ${maxRetries} attempts.`);
-                    }
-                } catch (e) {
-                    if (attempt === maxRetries - 1) throw e;
-                    // Log internally, but continue to retry
-                    await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
-                }
-            }
-            
-            // Remove loading message
             const loadingMsg = document.getElementById('loading-msg');
-            if(loadingMsg) loadingMsg.remove();
+            if (loadingMsg) loadingMsg.remove();
 
-            if (data && data.candidates && data.candidates[0].content) {
+            const data = await response.json();
+
+            if (data?.candidates?.[0]?.content) {
                 const reply = data.candidates[0].content.parts[0].text;
                 appendMessage(reply, 'bot-msg');
             } else {
-                throw new Error("No candidate returned or response structure invalid");
+                appendMessage("SYSTEM ERROR: Mainframe overheating. Try again later.", 'bot-msg');
             }
-
         } catch (error) {
-            // Error handling as requested
             const loadingMsg = document.getElementById('loading-msg');
-            if(loadingMsg) loadingMsg.remove();
-            console.error("Chatbot API Error:", error); 
-            appendMessage("SYSTEM ALERT: Currently updating the server... Looks like the mainframe is having a pixel meltdown. Try again later.", 'bot-msg');
+            if (loadingMsg) loadingMsg.remove();
+            appendMessage("SYSTEM ALERT: Pixel meltdown detected. Try again later.", 'bot-msg');
         }
     }
 
     function appendMessage(text, className) {
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${className}`;
-        
-        // Simple markdown parsing for bolding (optional polish)
-        const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-        msgDiv.innerHTML = formattedText;
-        
+        msgDiv.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
         chatDisplay.appendChild(msgDiv);
         chatDisplay.scrollTop = chatDisplay.scrollHeight;
     }
