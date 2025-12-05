@@ -55,7 +55,6 @@
             text-align: center;
         }
 
-        /* Header & Nav */
         header {
             margin-bottom: 40px;
             border-bottom: 2px solid var(--neon-purple);
@@ -105,7 +104,13 @@
             color: var(--bg-color);
             box-shadow: 0 0 15px var(--neon-blue);
         }
-        
+
+        /* Highlight active page */
+        .active-btn {
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+        }
+
         /* Prize Grid Styles */
         .prize-grid {
             display: grid;
@@ -142,7 +147,6 @@
             font-size: 1.1rem;
             text-transform: uppercase;
             margin-bottom: 15px;
-            /* Added text shadow for better readability */
             text-shadow: 0 0 5px rgba(15, 255, 0, 0.6); 
         }
 
@@ -151,13 +155,13 @@
             border-radius: 4px;
             overflow: hidden;
             width: 100%;
-            height: 180px; /* Fixed height for visual consistency */
+            height: 180px;
             display: flex;
             justify-content: center;
             align-items: center;
             background-color: #1a001a;
             box-shadow: inset 0 0 10px var(--neon-pink);
-            cursor: pointer; /* Indicate that the container is clickable */
+            cursor: pointer;
         }
 
         .prize-image-container img {
@@ -165,33 +169,33 @@
             height: 100%;
             object-fit: cover;
             transition: opacity 0.3s;
-            pointer-events: none; /* Allows click event to pass to container */
+            pointer-events: none;
         }
-        
+
         /* Fallback styling for missing images */
         .prize-image-container img[src*="placehold"] {
             object-fit: contain;
             padding: 10px;
         }
 
-        /* --- MODAL STYLES (Lightbox) --- */
+        /* Modal Styles */
         .modal {
-            display: none; /* Hidden by default */
+            display: none;
             position: fixed;
-            z-index: 1000; 
+            z-index: 1000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.95); /* Semi-transparent black background */
+            background-color: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(5px);
             animation: fadeIn 0.3s;
         }
 
         .modal-content {
-            margin: 15% auto; /* 15% from the top and centered */
-            width: 90%; 
+            margin: 15% auto;
+            width: 90%;
             max-width: 700px;
             position: relative;
             background-color: var(--bg-color);
@@ -201,7 +205,7 @@
             border-radius: 10px;
             animation: zoomIn 0.3s;
         }
-        
+
         .modal-content img {
             width: 100%;
             height: auto;
@@ -234,15 +238,12 @@
             transition: 0.3s;
         }
 
-        .close-btn:hover,
-        .close-btn:focus {
+        .close-btn:hover {
             color: var(--neon-blue);
-            text-decoration: none;
             border-color: var(--neon-blue);
             box-shadow: 0 0 10px var(--neon-blue);
         }
-        
-        /* Animations */
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -253,13 +254,12 @@
             to { transform: scale(1); opacity: 1; }
         }
 
-
         @media (max-width: 600px) {
             h1 { font-size: 1.5rem; }
             .subtitle { font-size: 0.9rem; }
             .nav-btn { width: 100%; margin-bottom: 5px;}
             .prize-grid { grid-template-columns: 1fr; }
-            .modal-content { margin: 30% auto; max-width: 95%;}
+            .modal-content { margin: 30% auto; max-width: 95%; }
         }
     </style>
 </head>
@@ -276,19 +276,19 @@
             <a href="index.html" class="nav-btn">Home</a>
             <a href="scoreboard.html" class="nav-btn">Scoreboard</a>
             <a href="gamerules.html" class="nav-btn">Game Rules</a>
-            <a href="prize.html" class="nav-btn" style="border-color: var(--neon-pink); color: var(--neon-pink);">Prize Pools</a>
-            <a href="#" class="nav-btn">Secret Santa</a>
-            <a href="#" class="nav-btn">Others</a>
+            <a href="themepark.html" class="nav-btn">Theme Park</a>
+            <a href="prize.html" class="nav-btn active-btn">Prize Pools</a>
+            <a href="wish.html" class="nav-btn">Secret Santa</a>
+            <a href="others.html" class="nav-btn">Others</a>
         </nav>
     </header>
 
-    <!-- The prize grid content will be dynamically inserted here by JavaScript -->
     <div id="prize-grid" class="prize-grid">
-        <!-- Dynamic content goes here -->
+        <!-- Dynamic prize items populated via JavaScript -->
     </div>
 </div>
 
-<!-- Prize Image Modal (Lightbox) -->
+<!-- Prize Modal -->
 <div id="prizeModal" class="modal">
     <div class="modal-content">
         <span class="close-btn">&times;</span>
@@ -298,8 +298,6 @@
 </div>
 
 <script>
-    // Array of your exact image file names (including spaces and capitalization).
-    // The script will use these names for both the file path and the display name.
     const prizeFiles = [
         '43 Inch TV.jpg', 
         'Air Fryer.jpg',
@@ -317,7 +315,7 @@
         'Smart Watch.jpg',
         'Sony Speaker.jpg',
         'Vacuum Cleaner 1.jpg',
-        'Vacuum Cleaner 2.jpg',
+        'Vacuum Cleaner 2.jpg'
     ];
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -326,73 +324,42 @@
         const modalImage = document.getElementById('modalImage');
         const modalCaption = document.getElementById('modalCaption');
         const closeBtn = document.querySelector('.close-btn');
-        
-        // --- Dynamic Content Generation ---
+
         prizeFiles.forEach((fileName, index) => {
             const rank = index + 1;
-            // IMPORTANT: Use encodeURIComponent for filenames with spaces/special characters in the URL path
-            const encodedFileName = fileName.split('/').map(segment => encodeURIComponent(segment)).join('/');
+            const encodedFileName = encodeURIComponent(fileName);
             const fullPath = `Prize/${encodedFileName}`;
-            
-            // Function to convert file name to display name:
-            const baseName = fileName.replace(/\.[^/.]+$/, ""); // Remove extension
-            const displayName = baseName.toUpperCase();
-            
-            // Create a version for the placeholder text (replacing spaces with + for URL)
-            const placeholderText = displayName.replace(/ /g, '+');
+            const baseName = fileName.replace(/\.[^/.]+$/, "").toUpperCase();
+            const placeholderText = baseName.replace(/ /g, '+');
 
-            const itemHTML = `
+            prizeGrid.innerHTML += `
                 <div class="prize-item">
                     <div class="prize-rank">RANK ${rank}</div>
-                    <h3 class="prize-name">${displayName}</h3>
-                    <div class="prize-image-container" data-src="${fullPath}" data-alt="${displayName}">
-                        <img 
-                            src="${fullPath}" 
-                            alt="${displayName}" 
-                            onerror="this.onerror=null; this.src='https://placehold.co/400x180/ff00ff/050505?text=IMAGE+FOR+${placeholderText}+MISSING'"
-                        >
+                    <h3 class="prize-name">${baseName}</h3>
+                    <div class="prize-image-container" data-src="${fullPath}" data-alt="${baseName}">
+                        <img src="${fullPath}" alt="${baseName}"
+                             onerror="this.onerror=null;this.src='https://placehold.co/400x180/ff00ff/050505?text=IMAGE+FOR+${placeholderText}+MISSING'">
                     </div>
                 </div>
             `;
-            
-            prizeGrid.innerHTML += itemHTML;
         });
-        
-        // --- Modal Functions ---
 
-        // Function to open the modal
         function openModal(src, alt) {
             modalImage.src = src;
             modalCaption.textContent = alt;
             modal.style.display = 'block';
         }
 
-        // Function to close the modal
         function closeModal() {
             modal.style.display = 'none';
         }
 
-        // Close when clicking the 'X' button
         closeBtn.onclick = closeModal;
+        modal.onclick = (e) => { if (e.target === modal) closeModal(); };
 
-        // Close when clicking outside the modal content
-        modal.onclick = (event) => {
-            if (event.target === modal) {
-                closeModal();
-            }
-        };
-
-        // Attach click listener using Event Delegation to the prize grid container
-        prizeGrid.addEventListener('click', (event) => {
-            let container = event.target.closest('.prize-image-container');
-            
-            if (container) {
-                const src = container.getAttribute('data-src');
-                const alt = container.getAttribute('data-alt');
-                if (src && alt) {
-                    openModal(src, alt);
-                }
-            }
+        prizeGrid.addEventListener('click', (e) => {
+            const container = e.target.closest('.prize-image-container');
+            if (container) openModal(container.dataset.src, container.dataset.alt);
         });
     });
 </script>
