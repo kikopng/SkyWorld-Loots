@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKYWORLD LOOTS | 2025</title>
+    <!-- Google Fonts for Retro Arcade Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-blue: #00ffff;
+            --neon-purple: #bc13fe;
+            --bg-color: #050505;
+            --text-color: #ffffff;
+            --terminal-green: #0f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Orbitron', sans-serif;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+        }
+
+        /* Scanline Effect */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Header & Nav */
+        header {
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--neon-purple);
+            padding-bottom: 20px;
+            box-shadow: 0 0 15px var(--neon-purple);
+        }
+
+        h1 {
+            font-family: 'Press Start 2P', cursive;
+            color: var(--neon-blue);
+            text-shadow: 2px 2px var(--neon-pink), 0 0 20px var(--neon-blue);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .subtitle {
+            color: var(--neon-pink);
+            letter-spacing: 3px;
+            font-size: 1.2rem;
+        }
+
+        nav {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 10px 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .nav-btn:hover {
+            background: var(--neon-blue);
+            color: var(--bg-color);
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        /* Itinerary Section */
+        .itinerary-box {
+            border: 2px solid var(--neon-pink);
+            padding: 20px;
+            margin: 30px 0;
+            box-shadow: 0 0 10px var(--neon-pink), inset 0 0 20px rgba(255, 0, 255, 0.2);
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .itinerary-title {
+            font-family: 'Press Start 2P';
+            color: var(--neon-pink);
+            margin-bottom: 20px;
+        }
+
+        .time-slot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px dashed var(--neon-blue);
+        }
+
+        .time-slot:last-child {
+            border-bottom: none;
+        }
+
+        .time {
+            font-weight: bold;
+            color: var(--neon-blue);
+            font-size: 1.2rem;
+        }
+
+        .activity {
+            text-align: right;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Chatbot Section - UI Improvements for Readability */
+        .chatbot-container {
+            margin-top: 50px;
+            border: 4px solid var(--terminal-green);
+            background-color: #000;
+            padding: 2px;
+            box-shadow: 0 0 20px var(--terminal-green);
+            position: relative;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 10px;
+        }
+
+        .chatbot-header {
+            background: var(--terminal-green);
+            color: #000;
+            font-family: 'Press Start 2P';
+            padding: 10px;
+            font-size: 0.8rem;
+        }
+
+        .chat-display {
+            height: 300px;
+            overflow-y: auto;
+            padding: 20px;
+            text-align: left;
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem; /* Increased font size for readability */
+            color: var(--terminal-green);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 85%; /* Slightly wider messages */
+        }
+
+        /* High-Contrast Chat Message Styles */
+        .bot-msg {
+            background: transparent; /* Changed to transparent for better visibility */
+            border-left: 3px solid var(--terminal-green);
+            align-self: flex-start;
+            color: var(--terminal-green);
+        }
+
+        .user-msg {
+            background: transparent; /* Changed to transparent for better visibility */
+            border-right: 3px solid var(--neon-blue);
+            color: var(--neon-blue);
+            align-self: flex-end;
+            text-align: right;
+        }
+
+        .chat-input-area {
+            display: flex;
+            border-top: 2px solid var(--terminal-green);
+        }
+
+        #user-input {
+            flex: 1;
+            background: #000;
+            border: none;
+            color: var(--terminal-green);
+            padding: 15px;
+            font-family: 'Orbitron', monospace;
+            outline: none;
+        }
+
+        #send-btn {
+            background: var(--terminal-green);
+            color: #000;
+            border: none;
+            padding: 0 20px;
+            font-family: 'Press Start 2P';
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        #send-btn:hover {
+            background: #fff;
+        }
+
+        /* Scrollbar for chat */
+        .chat-display::-webkit-scrollbar {
+            width: 8px;
+        }
+        .chat-display::-webkit-scrollbar-thumb {
+            background: var(--terminal-green); 
+            border-radius: 4px;
+        }
+        .chat-display::-webkit-scrollbar-track {
+            background: #000; 
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.5rem; }
+            .nav-btn { width: 100%; margin-bottom: 5px;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="scanlines"></div>
+
+<div class="container">
+    <header>
+        <h1>SKYWORLD LOOTS</h1>
+        <div class="subtitle">LEVEL: GENTING HIGHLANDS // 11-12 DEC 2025</div>
+        <div style="margin-top: 10px; color: #fff; font-size: 0.8rem;">HOSTS: JAYCE & SELINA</div>
+
+        <nav>
+            <a href="#" class="nav-btn">Home</a>
+            <a href="#" class="nav-btn">Scoreboard</a>
+            <a href="https://www.gentingskyworlds.com/en/rules-regulations.html" target="_blank" class="nav-btn">Game Rules</a>
+            <a href="#" class="nav-btn">Prize Pools</a>
+            <a href="#" class="nav-btn">Secret Santa</a>
+            <a href="#" class="nav-btn">Others</a>
+        </nav>
+    </header>
+
+    <div class="itinerary-box">
+        <h2 class="itinerary-title">MISSION LOG: DAY 1 (11 DEC)</h2>
+        
+        <div class="time-slot">
+            <div class="time">07:00 AM</div>
+            <div class="activity">Gather @ Loading Bay</div>
+        </div>
+        <div class="time-slot">
+            <div class="time">07:30 AM</div>
+            <div class="activity">Depart to Base (Genting)</div>
+        </div>
+        <div class="time-slot">
+            <div class="time">09:00 AM</div>
+            <div class="activity">Arrive First World Lobby</div>
+        </div>
+        <div class="time-slot">
+            <div class="time">10:00 AM</div>
+            <div class="activity">Enter SkyWorld Theme Park</div>
+        </div>
+        <div class="time-slot">
+            <div class="time">12:00 PM</div>
+            <div class="activity">Lunch @ Buck Café</div>
+        </div>
+        <div class="time-slot">
+            <div class="time">05:00 PM</div>
+            <div class="activity">Check-in Hotel</div>
+        </div>
+        <div class="time-slot">
+            <div class="time">06:00 PM</div>
+            <div class="activity">Gather & Dinner (Burger & Lobster)</div>
+        </div>
+    </div>
+
+    <!-- CHATBOT -->
+    <div class="chatbot-container">
+        <div class="chatbot-header">
+            NPC: JAYCE HOST [ONLINE]
+        </div>
+        <div class="chat-display" id="chat-display">
+            <div class="message bot-msg">
+                Greetings, Player! I am the automated consciousness of Host Jayce. I track the mission for Day 1 (11/12/2025). Ask me where you should be, what items you need, or **where to gather for lunch**!
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="user-input" placeholder="Type command here..." onkeypress="handleEnter(event)">
+            <button id="send-btn" onclick="sendMessage()">SEND</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- CONFIGURATION ---
+    // API Key split as requested for demonstration purposes (Placeholder Key)
+    const API_A = "AIzaSyADV6D3Lzl5piE";
+    const API_B = "MdcTg2dcj30H-A-rEyP8"; 
+    const API_KEY = API_A + API_B;
+
+    // --- CHATBOT LOGIC ---
+    const chatDisplay = document.getElementById('chat-display');
+    const userInput = document.getElementById('user-input');
+
+    // Knowledge Base for the Bot
+    const eventContext = `
+    You are a helpful, clear, and direct automated assistant named "Jayce Host".
+    Your purpose is to assist participants of the "SkyWorld Loots" company trip with their schedule.
+    
+    EVENT DETAILS:
+    Date: 11 Dec 2025 to 12 Dec 2025.
+    Location: Genting Highlands.
+    Hosts: Jayce and Selina.
+    Theme: SkyWorld Loots (Neon/Arcade).
+
+    LOGISTICS RULES (DAY 1 - 11/12/2025):
+    - 7:00 AM: Gather at Office Loading Bay.
+    - CARS: Load backpacks + Secret Santa gifts into Mr. Kelvin's car. 
+    - LUGGAGE RULE: Luggage should have been put in Ying's car on 10/12/2025. Ying's car isn't at office on 11/12.
+    - BACKPACK RULE: Once loaded in car, NO ACCESS until 5:00 PM (Hotel Check-in).
+    - 7:30 AM: Depart.
+    - 9:00 AM: Arrive First World Lobby. Walk to Theme Park.
+    - BRIEFING: By Jayce and Selina at entrance.
+    - 10:00 AM: Enter Theme Park. Group Photo.
+    - LOCKERS: Located in Andromeda Base. Rent one immediately.
+    - 10:30 AM - 12:00 PM: Free & Easy (Suggestion: Do 'Photo Target' game now).
+    - 12:00 PM: Gather at lockers, walk to Buck Café.
+    - LUNCH: Allowance RM35 was given on 10/12/2025.
+    - 12:50 PM: Mini Game "Animal Tag".
+    - 1:00 PM - 4:00 PM: Free & Easy.
+    - 4:00 PM: Gather at Central Park Garden (refer map if lost).
+    - 4:00 PM - 4:30 PM: "Pair Up" Game.
+    - 4:30 PM: Exit park. Collect backpacks/luggage.
+    - 5:00 PM: Check-in First World Hotel. Rest.
+    - 6:00 PM: Gather at Lobby. Dinner at Burger & Lobster.
+
+    GAMES: 6 Total (Hand Sign, Animal tag, Pair up, Photo target, Question, Creative photo). Rules sent on 10/12.
+
+    SECRET SANTA:
+    - Gifts brought to office on 9/12.
+    - Exchange happens during Annual Dinner.
+    - Wishlists are viewable on the website.
+
+    YOUR BEHAVIOR:
+    1. **Crucial Rule:** Your responses must be extremely concise, direct, and brief. Never write more than 3 sentences.
+    2. Reply ONLY to questions regarding the Day 1 Itinerary (11/12/2025).
+    3. If asked about something else, politely state that you can only provide information on the Day 1 schedule.
+    4. If you don't know the answer, state that the data is unavailable and suggest contacting the hosts (Jayce or Selina).
+    5. Always check the "Current User Time" provided below to advise them on what they should be doing NOW.
+    6. If the Current User Time is NOT 11 Dec 2025, note the date difference but still provide the factual answer for the 11th.
+    `;
+
+    function handleEnter(event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    }
+
+    async function sendMessage() {
+        const text = userInput.value.trim();
+        if (!text) return;
+
+        // Add user message to chat
+        appendMessage(text, 'user-msg');
+        userInput.value = '';
+
+        // Prepare context with REAL-TIME data
+        const now = new Date();
+        const malaysiaTime = now.toLocaleString("en-US", {timeZone: "Asia/Kuala_Lumpur"});
+        
+        // Construct the prompt
+        const prompt = `
+        ${eventContext}
+        
+        CURRENT USER TIME (Malaysia): ${malaysiaTime}
+        USER QUESTION: ${text}
+        
+        Based on the CURRENT USER TIME, advise them on their status in the timeline if relevant.
+        `;
+
+        // Show loading state 
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'message bot-msg';
+        loadingDiv.textContent = 'Processing request...';
+        loadingDiv.id = 'loading-msg';
+        chatDisplay.appendChild(loadingDiv);
+        chatDisplay.scrollTop = chatDisplay.scrollHeight;
+
+        try {
+            // Implement simple exponential backoff for robustness
+            const maxRetries = 3;
+            let response = null;
+            let data = null;
+            
+            for (let attempt = 0; attempt < maxRetries; attempt++) {
+                try {
+                    // Using the fixed model name gemini-2.5-flash
+                    response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: prompt
+                                }]
+                            }]
+                        })
+                    });
+
+                    if (response.ok) {
+                        data = await response.json();
+                        break; // Success
+                    } else if (attempt < maxRetries - 1) {
+                        // Wait before retrying (exponential backoff)
+                        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+                    } else {
+                        throw new Error(`API failed after ${maxRetries} attempts.`);
+                    }
+                } catch (e) {
+                    if (attempt === maxRetries - 1) throw e;
+                    // Log internally, but continue to retry
+                    await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+                }
+            }
+            
+            // Remove loading message
+            const loadingMsg = document.getElementById('loading-msg');
+            if(loadingMsg) loadingMsg.remove();
+
+            if (data && data.candidates && data.candidates[0].content) {
+                const reply = data.candidates[0].content.parts[0].text;
+                appendMessage(reply, 'bot-msg');
+            } else {
+                throw new Error("No candidate returned or response structure invalid");
+            }
+
+        } catch (error) {
+            // Error handling as requested
+            const loadingMsg = document.getElementById('loading-msg');
+            if(loadingMsg) loadingMsg.remove();
+            console.error("Chatbot API Error:", error); 
+            appendMessage("SYSTEM ALERT: Currently updating the server... Looks like the mainframe is having a pixel meltdown. Try again later.", 'bot-msg');
+        }
+    }
+
+    function appendMessage(text, className) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${className}`;
+        
+        // Simple markdown parsing for bolding (optional polish)
+        const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+        msgDiv.innerHTML = formattedText;
+        
+        chatDisplay.appendChild(msgDiv);
+        chatDisplay.scrollTop = chatDisplay.scrollHeight;
+    }
+</script>
+
+</body>
+</html>

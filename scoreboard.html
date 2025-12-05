@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCOREBOARD | SKYWORLD LOOTS</title>
+    <!-- Google Fonts for Retro Arcade Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-blue: #00ffff;
+            --neon-purple: #bc13fe;
+            --bg-color: #050505;
+            --text-color: #ffffff;
+            --terminal-green: #0f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Orbitron', sans-serif;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            min-height: 100vh;
+        }
+
+        /* Scanline Effect */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Header & Nav */
+        header {
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--neon-purple);
+            padding-bottom: 20px;
+            box-shadow: 0 0 15px var(--neon-purple);
+        }
+
+        h1 {
+            font-family: 'Press Start 2P', cursive;
+            color: var(--neon-blue);
+            text-shadow: 2px 2px var(--neon-pink), 0 0 20px var(--neon-blue);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .subtitle {
+            color: var(--neon-pink);
+            letter-spacing: 3px;
+            font-size: 1.2rem;
+        }
+
+        nav {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 10px 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .nav-btn:hover {
+            background: var(--neon-blue);
+            color: var(--bg-color);
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+        
+        /* Scoreboard Specific Styles */
+        .scoreboard-container {
+            border: 4px solid var(--terminal-green);
+            background-color: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 30px var(--terminal-green);
+            padding: 5px; /* Less padding to maximize iframe space */
+            border-radius: 8px;
+            overflow: hidden; /* Hide iframe scrollbars if possible */
+            /* Set a fixed height for the scoreboard area */
+            height: 70vh; 
+            min-height: 400px; 
+            max-width: 100%;
+        }
+
+        /* Styling for the embedded Google Sheet iframe */
+        #google-sheet-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: #000; /* Ensure black background if sheet loads slowly */
+        }
+        
+        /* Status Message - now used for instruction */
+        #status-message {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: var(--neon-purple);
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.5rem; }
+            .subtitle { font-size: 0.9rem; }
+            .nav-btn { width: 100%; margin-bottom: 5px;}
+            .scoreboard-container { height: 60vh; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="scanlines"></div>
+
+<div class="container">
+    <header>
+        <h1>SCOREBOARD</h1>
+        <div class="subtitle">LIVE GOOGLE SHEET EMBED // AUTOMATIC REFRESH</div>
+
+        <nav>
+            <a href="index.html" class="nav-btn">Home</a>
+            <a href="scoreboard.html" class="nav-btn" style="border-color: var(--neon-pink); color: var(--neon-pink);">Scoreboard</a>
+            <a href="https://www.gentingskyworlds.com/en/rules-regulations.html" target="_blank" class="nav-btn">Game Rules</a>
+            <a href="#" class="nav-btn">Prize Pools</a>
+            <a href="#" class="nav-btn">Secret Santa</a>
+            <a href="#" class="nav-btn">Others</a>
+        </nav>
+    </header>
+
+    <div class="scoreboard-container">
+        <!-- 
+            Embedding the published Google Sheet HTML view directly. 
+            The sheet will handle its own updates automatically.
+        -->
+        <iframe 
+            id="google-sheet-iframe" 
+            src="https://docs.google.com/spreadsheets/d/e/2PACX-1vShFGBBJoJcmTZjGvN4T6nWve1VocnyENukSihj5LnlZMm3PU5s4eKLmE3uW07YJG7Det1LErGrAPUz/pubhtml?gid=1037652140&single=true&widget=true&headers=false"
+            frameborder="0"
+        ></iframe>
+    </div>
+    <div id="status-message">
+        Note: This is the live embedded Google Sheet. Updates made in the sheet will reflect here automatically.
+    </div>
+</div>
+
+<script>
+    // No JavaScript needed for fetching! The iframe handles the display and refresh.
+    console.log("Scoreboard loaded using iframe embedding.");
+</script>
+
+</body>
+</html>
