@@ -326,7 +326,7 @@
         const closeBtn = document.querySelector('.close-btn');
 
         prizeFiles.forEach((fileName, index) => {
-            const rank = index + 1;
+            const prizeNumber = index + 1; // Changed variable name for clarity
             const encodedFileName = encodeURIComponent(fileName);
             const fullPath = `Prize/${encodedFileName}`;
             const baseName = fileName.replace(/\.[^/.]+$/, "").toUpperCase();
@@ -334,7 +334,7 @@
 
             prizeGrid.innerHTML += `
                 <div class="prize-item">
-                    <div class="prize-rank">RANK ${rank}</div>
+                    <div class="prize-rank">PRIZE ${prizeNumber}</div>
                     <h3 class="prize-name">${baseName}</h3>
                     <div class="prize-image-container" data-src="${fullPath}" data-alt="${baseName}">
                         <img src="${fullPath}" alt="${baseName}"
