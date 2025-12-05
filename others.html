@@ -207,7 +207,6 @@
             min-height: 20px;
         }
 
-
         @media (max-width: 600px) {
             h1 { font-size: 1.5rem; }
             .subtitle { font-size: 0.9rem; }
@@ -229,6 +228,10 @@
             <a href="index.html" class="nav-btn">Home</a>
             <a href="scoreboard.html" class="nav-btn">Scoreboard</a>
             <a href="gamerules.html" class="nav-btn">Game Rules</a>
+
+            <!-- ⭐ ADDED THEME PARK BUTTON HERE -->
+            <a href="themepark.html" class="nav-btn">Theme Park</a>
+
             <a href="prize.html" class="nav-btn">Prize Pools</a>
             <a href="wish.html" class="nav-btn">Secret Santa</a>
             <a href="others.html" class="nav-btn" style="border-color: var(--neon-pink); color: var(--neon-pink);">Others</a>
@@ -264,7 +267,6 @@
         let isWaiting = false;
         let isReady = false;
 
-        // Reset the game state and display the ready prompt
         function resetGame() {
             clearTimeout(timeoutId);
             reactionBox.className = 'state-ready';
@@ -274,62 +276,50 @@
             isReady = false;
         }
 
-        // Start the game logic
         function startGame() {
-            // 1. Set state to "WAIT"
             isWaiting = true;
             isReady = false;
             reactionBox.className = 'state-wait';
             reactionBox.textContent = 'WAIT FOR GREEN...';
             resultsDisplay.textContent = '...DO NOT CLICK YET...';
 
-            // 2. Set a random delay (2 to 7 seconds)
-            const delay = Math.random() * 5000 + 2000; // 2000ms (2s) to 7000ms (7s)
+            const delay = Math.random() * 5000 + 2000;
 
-            // 3. Set the timeout for the "GO" state
             timeoutId = setTimeout(goState, delay);
         }
 
-        // Transition to the "GO" state
         function goState() {
             isReady = true;
-            startTime = performance.now(); // Record the exact time the box turns green
+            startTime = performance.now();
             reactionBox.className = 'state-go';
             reactionBox.textContent = '!!! GO !!!';
         }
 
-        // Handle the user's click
         reactionBox.addEventListener('click', () => {
             if (isReady) {
-                // User clicked when it was green (GO state)
                 const endTime = performance.now();
-                const reactionTime = (endTime - startTime).toFixed(3); // Time in milliseconds
+                const reactionTime = (endTime - startTime).toFixed(3);
 
-                reactionBox.className = 'state-ready'; // Reset visual
+                reactionBox.className = 'state-ready';
                 reactionBox.textContent = 'RESULT';
                 resultsDisplay.textContent = `REACTION TIME: ${reactionTime} ms`;
                 
-                // Reset to start mode after a brief pause
                 setTimeout(resetGame, 2000); 
 
             } else if (isWaiting) {
-                // User clicked too early (WAIT state)
-                clearTimeout(timeoutId); // Stop the green box from appearing
+                clearTimeout(timeoutId);
                 reactionBox.className = 'state-too-soon';
                 reactionBox.textContent = 'TOO SOON!';
                 resultsDisplay.textContent = 'PENALTY: -500MS. WAIT FOR GREEN LIGHT.';
                 
-                // Reset to start mode after a brief pause
                 isWaiting = false;
                 setTimeout(resetGame, 3000); 
 
             } else {
-                // User clicked the start button (READY state)
                 startGame();
             }
         });
 
-        // Initialize game on load
         resetGame();
     });
 </script>
