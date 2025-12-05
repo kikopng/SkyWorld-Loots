@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THEME PARK INFO | SKYWORLD</title>
+    <!-- Google Fonts for Retro Arcade Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-blue: #00ffff;
+            --neon-purple: #bc13fe;
+            --bg-color: #050505;
+            --text-color: #ffffff;
+            --terminal-green: #0f0;
+            --warning-red: #ff3333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Orbitron', sans-serif;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            min-height: 100vh;
+        }
+
+        /* Scanline Effect */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Header & Nav */
+        header {
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--neon-purple);
+            padding-bottom: 20px;
+            box-shadow: 0 0 15px var(--neon-purple);
+        }
+
+        h1 {
+            font-family: 'Press Start 2P', cursive;
+            color: var(--terminal-green); /* Using green for visibility */
+            text-shadow: 2px 2px var(--neon-blue), 0 0 20px var(--terminal-green);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .subtitle {
+            color: var(--neon-pink);
+            letter-spacing: 3px;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        nav {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 10px 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .nav-btn:hover {
+            background: var(--neon-blue);
+            color: var(--bg-color);
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+        
+        /* Main Content Section */
+        .info-box {
+            border: 3px solid var(--neon-blue);
+            padding: 30px;
+            margin: 40px auto;
+            max-width: 800px;
+            background-color: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 20px var(--neon-blue);
+            border-radius: 8px;
+        }
+
+        .info-title {
+            font-family: 'Press Start 2P', cursive;
+            color: var(--neon-blue);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .button-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .action-link {
+            display: block;
+            background: var(--neon-pink);
+            color: var(--bg-color);
+            border: 2px solid var(--neon-pink);
+            padding: 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: 0.3s;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px var(--neon-pink);
+            border-radius: 4px;
+        }
+
+        .action-link:hover {
+            background: var(--bg-color);
+            color: var(--neon-pink);
+            box-shadow: 0 0 25px var(--neon-pink);
+        }
+        
+        .important-note {
+            margin-top: 30px;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            border: 1px dashed var(--neon-purple);
+            padding: 15px;
+        }
+
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.5rem; }
+            .subtitle { font-size: 0.9rem; }
+            .nav-btn { width: 100%; margin-bottom: 5px;}
+            .info-title { font-size: 1rem; }
+            .action-link { font-size: 0.7rem; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="scanlines"></div>
+
+<div class="container">
+    <header>
+        <h1>THEME PARK LOGISTICS</h1>
+        <div class="subtitle">SKYWORLD LOOTS // ESSENTIAL READINGS</div>
+
+        <nav>
+            <a href="index.html" class="nav-btn">Home</a>
+            <a href="scoreboard.html" class="nav-btn">Scoreboard</a>
+            <a href="gamerules.html" class="nav-btn">Game Rules</a>
+            <a href="themepark.html" class="nav-btn" style="border-color: var(--neon-purple); color: var(--neon-purple);">Theme Park</a>
+            <a href="prize.html" class="nav-btn">Prize Pools</a>
+            <a href="wish.html" class="nav-btn">Secret Santa</a>
+            <a href="others.html" class="nav-btn">Others</a>
+        </nav>
+    </header>
+
+    <!-- Theme Park Resources Section -->
+    <div class="info-box">
+        <div class="info-title">DOWNLOADS & RULES (EXTERNAL LINKS)</div>
+        
+        <p class="important-note">
+            Please review these documents before entering the SkyWorld Theme Park for safety and policy awareness. These links will open in a new tab.
+        </p>
+
+        <div class="button-grid">
+            <!-- Theme Park Rules and Regulation -->
+            <a href="https://gentingskyworlds.com/en/rules-regulations.html" target="_blank" class="action-link">
+                THEME PARK RULES AND REGULATION (EXTERNAL SITE)
+            </a>
+
+            <!-- Theme Park Brochure -->
+            <a href="https://www.gentingskyworlds.com/content/dam/approved/genting-skyworlds/web/home/gsw-park-guide-brochure/Park%20-Guide-Brochure-V1.7-eng.pdf?_gl=1*19joeho*_ga*MTc4OTI5OTQ1OC4xNzYxMTgzMTE5*_ga_FL4798J085*czE3NjQ5MTIwNzckbzE4JGcwJHQxNzY0OTEyMDc5JGo1OCRsMCRoMTI1Mjk5NTQyNQ.." target="_blank" class="action-link">
+                DOWNLOAD OFFICIAL THEME PARK BROCHURE (PDF)
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
