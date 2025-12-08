@@ -32,49 +32,6 @@
             min-height: 100vh;
         }
 
-        /* --- 1. CUSTOM SCROLLBAR --- */
-        ::-webkit-scrollbar {
-            width: 10px;
-            background: #000;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--neon-purple);
-            border: 1px solid var(--neon-blue);
-            border-radius: 5px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--neon-pink);
-            box-shadow: 0 0 10px var(--neon-pink);
-        }
-        ::-webkit-scrollbar-corner {
-            background: #000;
-        }
-
-        /* --- 2. BOOT SCREEN STYLES --- */
-        #boot-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 10000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Orbitron', monospace;
-            color: var(--terminal-green);
-            transition: opacity 0.8s ease-out;
-            pointer-events: none; /* Prevents blocking clicks during fade out */
-        }
-
-        .boot-text {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            text-shadow: 0 0 10px var(--terminal-green);
-            text-align: left;
-        }
-
         /* Background grid effect */
         .bg-grid {
             position: fixed;
@@ -300,42 +257,52 @@
             background: #fff;
         }
 
+        .chat-display::-webkit-scrollbar {
+            width: 8px;
+        }
+        .chat-display::-webkit-scrollbar-thumb {
+            background: var(--terminal-green); 
+            border-radius: 4px;
+        }
+        .chat-display::-webkit-scrollbar-track {
+            background: #000; 
+        }
+
         @media (max-width: 600px) {
             h1 { font-size: 1.5rem; }
             .nav-btn { width: 100%; margin-bottom: 5px;}
         }
 
-        /* TROLL IMAGE */
+        /* ============================ */
+        /* TROLL IMAGE ANIMATION STYLES */
+        /* ============================ */
         #troll-img {
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            width: 300px;
+            transform: translate(-50%, -50%) scale(0); /* Start hidden/tiny */
+            width: 300px; /* Adjust size as needed */
             z-index: 10000;
             pointer-events: none;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy pop-in */
         }
-        #troll-img.show { transform: translate(-50%, -50%) scale(1); }
+
+        /* State 1: Pop up in the center */
+        #troll-img.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* State 2: Fly away (up and to the right while rotating) */
         #troll-img.fly-away {
             transition: all 1s ease-in;
-            top: -200px; left: 120%; transform: rotate(720deg) scale(0.5);
+            top: -200px;       /* Fly off top */
+            left: 120%;        /* Fly off right */
+            transform: rotate(720deg) scale(0.5); /* Spin and shrink */
         }
 
     </style>
 </head>
 <body>
-
-<!-- 2. BOOT SCREEN HTML -->
-<div id="boot-screen">
-    <div class="boot-text">
-        > SYSTEM BOOT SEQUENCE INITIATED...<br>
-        > LOADING SKYWORLD ASSETS... [OK]<br>
-        > ESTABLISHING SECURE CONNECTION... [OK]<br>
-        > INITIALIZING NEURAL NETWORK... [OK]<br>
-        > WELCOME PLAYER.
-    </div>
-</div>
 
 <div class="bg-grid"></div>
 <div class="scanlines"></div>
@@ -343,18 +310,18 @@
 
 <div class="container">
     <header>
-        <h1 class="hacker-text">SKYWORLD LOOTS</h1>
-        <div class="subtitle hacker-text">LEVEL: GENTING HIGHLANDS // 11-12 DEC 2025</div>
+        <h1>SKYWORLD LOOTS</h1>
+        <div class="subtitle">LEVEL: GENTING HIGHLANDS // 11-12 DEC 2025</div>
         <div style="margin-top: 10px; color: #fff; font-size: 0.8rem;">HOSTS: JAYCE & SELINA</div>
 
         <nav>
-            <a href="#" class="nav-btn hacker-text" style="border-color: var(--neon-pink); color: var(--neon-pink); box-shadow: 0 0 10px var(--neon-pink);">Home</a>
-            <a href="scoreboard.html" class="nav-btn hacker-text">Scoreboard</a>
-            <a href="gamerules.html" class="nav-btn hacker-text">Game Rules</a>
-            <a href="themepark.html" class="nav-btn hacker-text">Theme Park</a>
-            <a href="prize.html" class="nav-btn hacker-text">Prize Pools</a>
-            <a href="wish.html" class="nav-btn hacker-text">Secret Santa</a>
-            <a href="others.html" class="nav-btn hacker-text">Others</a>
+            <a href="#" class="nav-btn" style="border-color: var(--neon-pink); color: var(--neon-pink); box-shadow: 0 0 10px var(--neon-pink);">Home</a>
+            <a href="scoreboard.html" class="nav-btn">Scoreboard</a>
+            <a href="gamerules.html" class="nav-btn">Game Rules</a>
+            <a href="themepark.html" class="nav-btn">Theme Park</a>
+            <a href="prize.html" class="nav-btn">Prize Pools</a>
+            <a href="wish.html" class="nav-btn">Secret Santa</a>
+            <a href="others.html" class="nav-btn">Others</a>
         </nav>
         </header>
 
@@ -397,7 +364,7 @@
         </div>
         <div class="chat-display" id="chat-display">
             <div class="message bot-msg">
-        	Greetings, Player! I am AI Jayce.<br><br>
+        	Greetings, Player! I am Jayce AI.<br><br>
         	You can ask me info for Day 1 (11/12/2025).<br>
         	For example: Ask me where to gather for lunch.<br><br>
         	You can ask me in any language!
@@ -413,111 +380,9 @@
 <img id="troll-img" src="troll.png" alt="Troll Face">
 
 <script>
-    // =====================================================
-    // 1. SYSTEM BOOT SCREEN LOGIC
-    // =====================================================
-    window.addEventListener('load', () => {
-        setTimeout(() => {
-            const bootScreen = document.getElementById('boot-screen');
-            bootScreen.style.opacity = '0';
-            setTimeout(() => {
-                bootScreen.style.display = 'none';
-            }, 800); // Wait for transition to finish
-        }, 1500); // Show boot screen for 1.5 seconds
-    });
 
     // =====================================================
-    // 2. AUDIO SYSTEM (Synthesized Sounds)
-    // =====================================================
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-    function playSound(type) {
-        // Ensure context is running (browsers suspend it by default)
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-
-        const now = audioCtx.currentTime;
-
-        if (type === 'hover') {
-            // High pitch chirp
-            oscillator.type = 'sine';
-            oscillator.frequency.setValueAtTime(800, now);
-            oscillator.frequency.exponentialRampToValueAtTime(1200, now + 0.05);
-            gainNode.gain.setValueAtTime(0.02, now); // Volume low
-            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-            oscillator.start(now);
-            oscillator.stop(now + 0.05);
-        } 
-        else if (type === 'click') {
-            // Low pitch selection blip
-            oscillator.type = 'square';
-            oscillator.frequency.setValueAtTime(300, now);
-            oscillator.frequency.exponentialRampToValueAtTime(100, now + 0.1);
-            gainNode.gain.setValueAtTime(0.05, now);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
-            oscillator.start(now);
-            oscillator.stop(now + 0.1);
-        }
-    }
-
-    // Attach sounds to all interactive elements
-    document.querySelectorAll('a, button, .nav-btn, input').forEach(el => {
-        el.addEventListener('mouseenter', () => playSound('hover'));
-        el.addEventListener('click', () => playSound('click'));
-    });
-
-    // =====================================================
-    // 3. HACKER TEXT SCRAMBLE EFFECT
-    // =====================================================
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*";
-    
-    const hackerElements = document.querySelectorAll('.hacker-text');
-
-    // 1. Memorize the correct text on load to prevent corruption
-    hackerElements.forEach(element => {
-        element.dataset.value = element.innerText; // Store original text in a data attribute
-    });
-
-    hackerElements.forEach(element => {
-        element.addEventListener("mouseover", event => {  
-            let iteration = 0;
-            
-            // ALWAYS read from the safe data-attribute, NEVER from innerText
-            const originalText = element.dataset.value; 
-            
-            clearInterval(element.interval);
-
-            element.interval = setInterval(() => {
-                element.innerText = originalText
-                    .split("")
-                    .map((letter, index) => {
-                        // If we are passed this index, show the REAL letter
-                        if(index < iteration) {
-                            return originalText[index];
-                        }
-                        // Otherwise show a random matrix character
-                        return letters[Math.floor(Math.random() * letters.length)];
-                    })
-                    .join("");
-
-                if(iteration >= originalText.length){ 
-                    clearInterval(element.interval);
-                    // Force the final result to be exact to fix any leftover artifacts
-                    element.innerText = originalText;
-                }
-                
-                iteration += 1 / 3;
-            }, 30);
-        });
-    });
-
-    // =====================================================
-    // 4. 3D NEURAL NETWORK VISUALIZATION (Three.js)
+    // 3D NEURAL NETWORK VISUALIZATION (Three.js)
     // =====================================================
     const initThreeJS = () => {
         const container = document.getElementById('canvas-container');
@@ -531,6 +396,7 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         container.appendChild(renderer.domElement);
 
+        // CREATE PARTICLES
         const geometry = new THREE.BufferGeometry();
         const particleCount = 200; 
         const posArray = new Float32Array(particleCount * 3);
@@ -541,6 +407,7 @@
 
         geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
 
+        // Material for dots
         const material = new THREE.PointsMaterial({
             size: 0.7,
             color: 0x00ffff, 
@@ -548,6 +415,7 @@
             opacity: 0.8,
         });
 
+        // Material for lines
         const lineMaterial = new THREE.LineBasicMaterial({
             color: 0xbc13fe, 
             transparent: true,
@@ -557,10 +425,12 @@
         const particlesMesh = new THREE.Points(geometry, material);
         scene.add(particlesMesh);
 
+        // MOUSE INTERACTION
         let mouseX = 0;
         let mouseY = 0;
         let targetX = 0;
         let targetY = 0;
+
         const windowHalfX = window.innerWidth / 2;
         const windowHalfY = window.innerHeight / 2;
 
@@ -569,6 +439,7 @@
             mouseY = (event.clientY - windowHalfY);
         });
 
+        // ANIMATION LOOP
         const clock = new THREE.Clock();
 
         const animate = () => {
@@ -581,6 +452,7 @@
             particlesMesh.rotation.x += .05 * (targetY - particlesMesh.rotation.x);
             particlesMesh.rotation.y += .05 * (targetX - particlesMesh.rotation.y);
 
+            // Dynamic Lines Logic 
             const lineGeometry = new THREE.BufferGeometry();
             const linePositions = [];
             const positions = particlesMesh.geometry.attributes.position.array;
@@ -620,6 +492,7 @@
 
         animate();
 
+        // Handle Resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
@@ -627,22 +500,25 @@
         });
     };
 
+    // Initialize the 3D Background
     initThreeJS();
 
 
     // =====================================================
-    // 5. CHATBOT LOGIC (Gemini)
+    // MULTI-API KEY SYSTEM (supports many backups)
     // =====================================================
     const API_KEYS = [
-        { A: "AIzaSyADV6D3Lzl5piE", B: "MdcTg2dcj30H-A-rEyP8" }, 
-        { A: "AIzaSyDNVOG5jV1z5l", B: "1ghdAy2UFCBuxaoTLgh2Y" }, 
-        { A: "AIzaSyAflXoNsYmyjSa", B: "xomoEps2av4J5jGiPR7w" }, 
-        { A: "AIzaSyAp2sKOhs9R7HE", B: "aA1xHMwq--_S2aFdvf2c" }, 
-        { A: "AIzaSyAO3eSo5g9fiUb", B: "dbcJsoNPGiBLNiIKX5zk" }, 
-        { A: "AIzaSyBQsnuHXoh03F", B: "OmIQX-Z79dQ8dKrdp6KTk" }  
+        { A: "AIzaSyADV6D3Lzl5piE", B: "MdcTg2dcj30H-A-rEyP8" }, // Primary
+        { A: "AIzaSyDNVOG5jV1z5l", B: "1ghdAy2UFCBuxaoTLgh2Y" }, // Backup 1
+        { A: "AIzaSyAflXoNsYmyjSa", B: "xomoEps2av4J5jGiPR7w" }, // Backup 2 (fill later)
+        { A: "AIzaSyAp2sKOhs9R7HE", B: "aA1xHMwq--_S2aFdvf2c" }, // Backup 3 (fill later)
+        { A: "AIzaSyAO3eSo5g9fiUb", B: "dbcJsoNPGiBLNiIKX5zk" }, // Backup 4 (fill later)
+        { A: "AIzaSyBQsnuHXoh03F", B: "OmIQX-Z79dQ8dKrdp6KTk" }  // Backup 5 (fill later)
     ];
 
-    function buildKey(obj) { return obj.A + obj.B; }
+    function buildKey(obj) {
+        return obj.A + obj.B;
+    }
 
     async function callGemini(key, prompt) {
         return fetch(
@@ -650,7 +526,9 @@
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }]
+                })
             }
         );
     }
@@ -659,11 +537,14 @@
     const userInput = document.getElementById('user-input');
 
     const eventContext = `
-    You are a helpful, clear, and direct automated assistant named "Jayce Host".
+    You are a helpful, clear, and direct automated assistant named "Jayce AI".
     Your purpose is to assist participants of the "SkyWorld Loots" company trip with their schedule.
     
     EVENT DETAILS:
-    Date: 11 Dec 2025 to 12 Dec 2025. Location: Genting Highlands. Hosts: Jayce and Selina. Theme: SkyWorld Loots (Neon/Arcade).
+    Date: 11 Dec 2025 to 12 Dec 2025.
+    Location: Genting Highlands.
+    Hosts: Jayce and Selina.
+    Theme: SkyWorld Loots (Neon/Arcade).
 
     LOGISTICS RULES (DAY 1 - 11/12/2025):
     - 7:00 AM: Gather at Office Loading Bay, Load backpacks + Secret Santa gifts into Mr. Kelvin's car. 
@@ -681,12 +562,24 @@
     - 1:00 PM - 4:00 PM: Free & Easy.
     - 4:00 PM: Gather at Central Park Garden.
     - 4:00 PM - 4:30 PM: "Pair Up" Game.
-    - 4:30 PM: Exit park. Go to carpack to collect backpacks/luggage.
+    - 4:30 PM: Exit park. Go to carpack to collect backpacks/luggage (Follow host/person who parked the car)
     - 5:00 PM: Check-in First World Hotel.
     - 6:00 PM: Gather at Lobby. Dinner at Burger & Lobster.
 
-    GAMES: 6 Total (Hand Sign, Pair up, animal Tag, Photo Target, Creative Photo, Question).
-    SECRET SANTA: Exchange happens during Annual Dinner.
+    GAMES: 6 Total (Hand Sign, Pair up, animal Tag, Photo Target, Creative Photo, Question). detailed info can ask user to read the game rules in the game rule tab, or ask host.
+
+    SECRET SANTA:
+    - Gifts brought to office on 9/12.
+    - Exchange happens during Annual Dinner.
+
+    The Webpage (SkyWorld Loots)
+    The current website (which i put the chatbot), has a bunch of information, homepage got chatbot and basic itinerary. other pages including:
+	1. Scoreboard: scoreboard is where each player's point (Gain point after mini games) will be displayed there. 
+	2. Game rules: player can read the games instruction and point arrangement for each game. there are 2 files, one if for normal situation, another one is game rules if there's rain
+	3. Theme park: contain the rules and regulation, and other themepark info. contain the themepark brochure including the map.
+	4. Prize Pool: contain all the prize pool for this event, during dinner, after the points were finalized, player can choose their prize based on their ranking (first rank choose first). Total 17 prizes for 17 players
+	5. Secret Santa: We will also have gift exchange for secret santa, where players were assigned to their own secret santa earlier in this year. and everyone posted their Wishlist online. In case they want to read the wish list again, they can view it in this page.
+
 
     YOUR BEHAVIOR:
     1. VERY SHORT answers (max 3 sentences).
@@ -694,11 +587,13 @@
     3. If asked something else: say you can only provide Day 1 details. 
     
     CRITICAL RULE FOR TROLLS/FUNNY/WEIRD QUESTIONS:
-    4. If the user asks something dumb, playful, trolling, or weird (e.g. "Can I fly?"):
+    4. If the user asks something dumb, playful, trolling, or weird (e.g. "Can I fly?", "Where is the toilet for aliens?", "i want to go home"):
        - Answer them humorously or sarcastically.
        - YOU MUST END YOUR RESPONSE WITH THIS EXACT TAG: [[TROLL_DETECTED]]
        
     5. Compare with current Malaysia time when answering.
+    6. If user say "testing mode", then this is the it admin. you can ask the it any question that will help you to work better before you deploy
+
     `;
 
     function handleEnter(event) {
@@ -707,6 +602,9 @@
         }
     }
 
+    // =====================================================
+    // UPDATED SENDMESSAGE() WITH UNLIMITED API FAILOVER
+    // =====================================================
     async function sendMessage() {
         const text = userInput.value.trim();
         if (!text) return;
@@ -719,8 +617,10 @@
 
         const prompt = `
         ${eventContext}
+
         CURRENT USER TIME (Malaysia): ${malaysiaTime}
         USER QUESTION: ${text}
+
         Based on the CURRENT USER TIME, advise them on their status in the timeline if relevant.
         `;
 
@@ -733,33 +633,47 @@
 
         let finalResponse = null;
 
+        // Try each API key one by one
         for (let i = 0; i < API_KEYS.length; i++) {
             const keyObj = API_KEYS[i];
             if (!keyObj.A || !keyObj.B) continue;
+
             const fullKey = buildKey(keyObj);
 
             try {
                 let response = await callGemini(fullKey, prompt);
                 let data = null;
-                try { data = await response.clone().json(); } catch (e) { data = null; }
+
+                try {
+                    data = await response.clone().json();
+                } catch (e) { data = null; }
+
                 if (response.ok && data && !data.error) {
                     finalResponse = data;
                     break;
                 }
-            } catch (err) {}
+            } catch (err) {
+                // continue to next key
+            }
         }
 
         document.getElementById('loading-msg')?.remove();
 
         if (finalResponse?.candidates?.[0]?.content) {
             let reply = finalResponse.candidates[0].content.parts[0].text;
+
+            // CHECK FOR TROLL TAG
             if (reply.includes('[[TROLL_DETECTED]]')) {
+                // 1. Remove the tag so the user doesn't see it text
                 reply = reply.replace('[[TROLL_DETECTED]]', '');
+                
+                // 2. Trigger the image animation
                 triggerTroll();
             }
+
             appendMessage(reply, 'bot-msg');
         } else {
-            appendMessage("SYSTEM ERROR: No functioning API key detected.", 'bot-msg');
+            appendMessage("SYSTEM ERROR: No functioning API key detected. Please try again later.", 'bot-msg');
         }
     }
 
@@ -771,14 +685,25 @@
         chatDisplay.scrollTop = chatDisplay.scrollHeight;
     }
 
+    // =====================================================
+    // TROLL ANIMATION TRIGGER
+    // =====================================================
     function triggerTroll() {
         const img = document.getElementById('troll-img');
+        
+        // 1. Reset (in case it was just used)
         img.className = ''; 
-        requestAnimationFrame(() => { img.classList.add('show'); });
+        
+        // 2. Make it pop up (Small delay to ensure reset happened)
+        requestAnimationFrame(() => {
+            img.classList.add('show');
+        });
+
+        // 3. Wait 2 seconds, then fly away
         setTimeout(() => {
             img.classList.remove('show');
             img.classList.add('fly-away');
-        }, 2000); 
+        }, 2000); // Image stays on screen for 2 seconds
     }
 </script>
 
