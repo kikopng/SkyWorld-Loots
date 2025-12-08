@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SKYWORLD LOOTS | 2025</title>
-    <!-- Google Fonts for Retro Arcade Look -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
@@ -243,6 +242,34 @@
             h1 { font-size: 1.5rem; }
             .nav-btn { width: 100%; margin-bottom: 5px;}
         }
+
+        /* ============================ */
+        /* TROLL IMAGE ANIMATION STYLES */
+        /* ============================ */
+        #troll-img {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0); /* Start hidden/tiny */
+            width: 300px; /* Adjust size as needed */
+            z-index: 10000;
+            pointer-events: none;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy pop-in */
+        }
+
+        /* State 1: Pop up in the center */
+        #troll-img.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* State 2: Fly away (up and to the right while rotating) */
+        #troll-img.fly-away {
+            transition: all 1s ease-in;
+            top: -200px;       /* Fly off top */
+            left: 120%;        /* Fly off right */
+            transform: rotate(720deg) scale(0.5); /* Spin and shrink */
+        }
+
     </style>
 </head>
 <body>
@@ -255,7 +282,6 @@
         <div class="subtitle">LEVEL: GENTING HIGHLANDS // 11-12 DEC 2025</div>
         <div style="margin-top: 10px; color: #fff; font-size: 0.8rem;">HOSTS: JAYCE & SELINA</div>
 
-        <!-- UPDATED NAVIGATION LINKS -->
         <nav>
             <a href="#" class="nav-btn">Home</a>
             <a href="scoreboard.html" class="nav-btn">Scoreboard</a>
@@ -265,8 +291,7 @@
             <a href="wish.html" class="nav-btn">Secret Santa</a>
             <a href="others.html" class="nav-btn">Others</a>
         </nav>
-        <!-- END UPDATED NAVIGATION LINKS -->
-    </header>
+        </header>
 
     <div class="itinerary-box">
         <h2 class="itinerary-title">MISSION LOG: DAY 1 (11 DEC)</h2>
@@ -301,7 +326,6 @@
         </div>
     </div>
 
-    <!-- CHATBOT -->
     <div class="chatbot-container">
         <div class="chatbot-header">
             NPC: JAYCE HOST [ONLINE]
@@ -318,6 +342,8 @@
     </div>
 </div>
 
+<img id="troll-img" src="troll.png" alt="Troll Face">
+
 <script>
 
     // =====================================================
@@ -328,8 +354,8 @@
         { A: "AIzaSyDNVOG5jV1z5l", B: "1ghdAy2UFCBuxaoTLgh2Y" }, // Backup 1
         { A: "AIzaSyAflXoNsYmyjSa", B: "xomoEps2av4J5jGiPR7w" }, // Backup 2 (fill later)
         { A: "AIzaSyAp2sKOhs9R7HE", B: "aA1xHMwq--_S2aFdvf2c" }, // Backup 3 (fill later)
-        { A: "AIzaSyAO3eSo5g9fiUb", B: "dbcJsoNPGiBLNiIKX5zk" }  // Backup 4 (fill later)
-        { A: "AIzaSyBQsnuHXoh03F", B: "OmIQX-Z79dQ8dKrdp6KTk" }  // Backup 4 (fill later)
+        { A: "AIzaSyAO3eSo5g9fiUb", B: "dbcJsoNPGiBLNiIKX5zk" }, // Backup 4 (fill later) - FIXED COMMA
+        { A: "AIzaSyBQsnuHXoh03F", B: "OmIQX-Z79dQ8dKrdp6KTk" }  // Backup 5 (fill later)
     ];
 
     function buildKey(obj) {
@@ -400,8 +426,13 @@
     YOUR BEHAVIOR:
     1. VERY SHORT answers (max 3 sentences).
     2. Only answer Day 1 Itinerary questions.
-    3. If asked something else: say you can only provide Day 1 details. if they purposely ask something funny, trolling, weird. then you may answer them humorously. otherwise, answer them normally.
-    4. If unknown: tell them data unavailable, ask hosts.
+    3. If asked something else: say you can only provide Day 1 details. 
+    
+    CRITICAL RULE FOR TROLLS/FUNNY/WEIRD QUESTIONS:
+    4. If the user asks something dumb, playful, trolling, or weird (e.g. "Can I fly?", "Where is the toilet for aliens?", "i want to go home"):
+       - Answer them humorously or sarcastically.
+       - YOU MUST END YOUR RESPONSE WITH THIS EXACT TAG: [[TROLL_DETECTED]]
+       
     5. Compare with current Malaysia time when answering.
     6. If user say "testing mode", then this is the it admin. you can ask the it any question that will help you to work better before you deploy
 
@@ -471,7 +502,17 @@
         document.getElementById('loading-msg')?.remove();
 
         if (finalResponse?.candidates?.[0]?.content) {
-            const reply = finalResponse.candidates[0].content.parts[0].text;
+            let reply = finalResponse.candidates[0].content.parts[0].text;
+
+            // CHECK FOR TROLL TAG
+            if (reply.includes('[[TROLL_DETECTED]]')) {
+                // 1. Remove the tag so the user doesn't see it text
+                reply = reply.replace('[[TROLL_DETECTED]]', '');
+                
+                // 2. Trigger the image animation
+                triggerTroll();
+            }
+
             appendMessage(reply, 'bot-msg');
         } else {
             appendMessage("SYSTEM ERROR: No functioning API key detected. Please try again later.", 'bot-msg');
@@ -484,6 +525,27 @@
         msgDiv.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
         chatDisplay.appendChild(msgDiv);
         chatDisplay.scrollTop = chatDisplay.scrollHeight;
+    }
+
+    // =====================================================
+    // TROLL ANIMATION TRIGGER
+    // =====================================================
+    function triggerTroll() {
+        const img = document.getElementById('troll-img');
+        
+        // 1. Reset (in case it was just used)
+        img.className = ''; 
+        
+        // 2. Make it pop up (Small delay to ensure reset happened)
+        requestAnimationFrame(() => {
+            img.classList.add('show');
+        });
+
+        // 3. Wait 2 seconds, then fly away
+        setTimeout(() => {
+            img.classList.remove('show');
+            img.classList.add('fly-away');
+        }, 2000); // Image stays on screen for 2 seconds
     }
 </script>
 
