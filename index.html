@@ -319,34 +319,35 @@
 </div>
 
 <script>
-    // ---------- API section (REPLACED) ----------
-    // Primary API split parts (unchanged)
-    const API_A = "AIzaSyADV6D3Lzl5piE";
-    const API_B = "MdcTg2dcj30H-A-rEyP8";
 
-    // Backup API split parts (new)
-    const API_A2 = "AIzaSyAp2sKOhs9R7HE";
-    const API_B2 = "aA1xHMwq--_S2aFdvf2c";
+    // =====================================================
+    // MULTI-API KEY SYSTEM (supports many backups)
+    // =====================================================
+    const API_KEYS = [
+        { A: "AIzaSyADV6D3Lzl5piE", B: "MdcTg2dcj30H-A-rEyP8" }, // Primary
+        { A: "AIzaSyDNVOG5jV1z5l", B: "1ghdAy2UFCBuxaoTLgh2Y" }, // Backup 1
+        { A: "AIzaSyAflXoNsYmyjSa", B: "xomoEps2av4J5jGiPR7w" }, // Backup 2 (fill later)
+        { A: "AIzaSyAp2sKOhs9R7HE", B: "aA1xHMwq--_S2aFdvf2c" }, // Backup 3 (fill later)
+        { A: "AIzaSyAO3eSo5g9fiUb", B: "dbcJsoNPGiBLNiIKX5zk" }  // Backup 4 (fill later)
+        { A: "AIzaSyBQsnuHXoh03F", B: "OmIQX-Z79dQ8dKrdp6KTk" }  // Backup 4 (fill later)
+    ];
 
-    function getPrimaryKey() {
-        return API_A + API_B;
+    function buildKey(obj) {
+        return obj.A + obj.B;
     }
 
-    function getBackupKey() {
-        return API_A2 + API_B2;
+    async function callGemini(key, prompt) {
+        return fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${key}`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }]
+                })
+            }
+        );
     }
-
-    async function callGeminiWithKey(apiKey, prompt) {
-        // returns the fetch Response object (so caller can inspect .ok, status, etc.)
-        return fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }]
-            })
-        });
-    }
-    // ---------- end API section ----------
 
     const chatDisplay = document.getElementById('chat-display');
     const userInput = document.getElementById('user-input');
@@ -412,7 +413,9 @@
         }
     }
 
-    // ---------- sendMessage() replaced to use primary + backup keys ----------
+    // =====================================================
+    // UPDATED SENDMESSAGE() WITH UNLIMITED API FAILOVER
+    // =====================================================
     async function sendMessage() {
         const text = userInput.value.trim();
         if (!text) return;
@@ -421,11 +424,11 @@
         userInput.value = '';
 
         const now = new Date();
-        const malaysiaTime = now.toLocaleString("en-US", {timeZone: "Asia/Kuala_Lumpur"});
-        
+        const malaysiaTime = now.toLocaleString("en-US", { timeZone: "Asia/Kuala_Lumpur" });
+
         const prompt = `
         ${eventContext}
-        
+
         CURRENT USER TIME (Malaysia): ${malaysiaTime}
         USER QUESTION: ${text}
 
@@ -439,48 +442,41 @@
         chatDisplay.appendChild(loadingDiv);
         chatDisplay.scrollTop = chatDisplay.scrollHeight;
 
-        try {
-            // Try primary key first
-            let response = await callGeminiWithKey(getPrimaryKey(), prompt);
+        let finalResponse = null;
 
-            // If primary fails (network ok but non-2xx OR returned JSON contains error),
-            // attempt backup. We'll attempt backup on either non-ok response or response JSON has .error.
-            let data;
+        // Try each API key one by one
+        for (let i = 0; i < API_KEYS.length; i++) {
+            const keyObj = API_KEYS[i];
+            if (!keyObj.A || !keyObj.B) continue;
+
+            const fullKey = buildKey(keyObj);
+
             try {
-                data = await response.clone().json();
-            } catch (e) {
-                // invalid JSON or no body; treat as failure
-                data = null;
-            }
+                let response = await callGemini(fullKey, prompt);
+                let data = null;
 
-            if (!response.ok || (data && data.error)) {
-                console.warn("Primary API failed or returned error; attempting backup API key...");
-                // attempt backup
-                response = await callGeminiWithKey(getBackupKey(), prompt);
                 try {
-                    data = await response.json();
-                } catch (e) {
-                    data = null;
+                    data = await response.clone().json();
+                } catch (e) { data = null; }
+
+                if (response.ok && data && !data.error) {
+                    finalResponse = data;
+                    break;
                 }
+            } catch (err) {
+                // continue to next key
             }
+        }
 
-            const loadingMsg = document.getElementById('loading-msg');
-            if (loadingMsg) loadingMsg.remove();
+        document.getElementById('loading-msg')?.remove();
 
-            if (data?.candidates?.[0]?.content) {
-                const reply = data.candidates[0].content.parts[0].text;
-                appendMessage(reply, 'bot-msg');
-            } else {
-                appendMessage("SYSTEM ERROR: Mainframe overheating. Try again later.", 'bot-msg');
-            }
-        } catch (error) {
-            // Network or unexpected error for both tries
-            const loadingMsg = document.getElementById('loading-msg');
-            if (loadingMsg) loadingMsg.remove();
-            appendMessage("SYSTEM ALERT: Pixel meltdown detected. Try again later.", 'bot-msg');
+        if (finalResponse?.candidates?.[0]?.content) {
+            const reply = finalResponse.candidates[0].content.parts[0].text;
+            appendMessage(reply, 'bot-msg');
+        } else {
+            appendMessage("SYSTEM ERROR: No functioning API key detected. Please try again later.", 'bot-msg');
         }
     }
-    // ---------- end sendMessage replacement ----------
 
     function appendMessage(text, className) {
         const msgDiv = document.createElement('div');
