@@ -274,30 +274,92 @@
         }
 
         /* ============================ */
-        /* TROLL IMAGE ANIMATION STYLES */
+        /* JOJO TROLL VIDEO STYLES      */
         /* ============================ */
-        #troll-img {
+        #troll-container {
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0); /* Start hidden/tiny */
-            width: 300px; /* Adjust size as needed */
+            transform: translate(-50%, -50%) scale(0); /* Start hidden */
+            width: 80vw;
+            max-width: 600px;
             z-index: 10000;
             pointer-events: none;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy pop-in */
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* State 1: Pop up in the center */
-        #troll-img.show {
-            transform: translate(-50%, -50%) scale(1);
+        #troll-video {
+            width: 100%;
+            border: 5px solid var(--neon-purple);
+            box-shadow: 10px 10px 0px var(--neon-blue), 0 0 20px var(--neon-pink);
+            background: #000;
+            display: block;
         }
 
-        /* State 2: Fly away (up and to the right while rotating) */
-        #troll-img.fly-away {
-            transition: all 1s ease-in;
-            top: -200px;       /* Fly off top */
-            left: 120%;        /* Fly off right */
-            transform: rotate(720deg) scale(0.5); /* Spin and shrink */
+        /* The "Menacing" (Go Go Go) Text Symbols */
+        .menacing-symbol {
+            position: absolute;
+            font-family: sans-serif; /* Fallback */
+            font-weight: bold;
+            color: var(--neon-purple);
+            font-size: 4rem;
+            text-shadow: 3px 3px 0 #000;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* JOJO ENTRANCE: Dramatic Zoom + Tilt */
+        #troll-container.jojo-enter {
+            animation: standSummon 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* JOJO EXIT: Ghostly fade upwards */
+        #troll-container.jojo-exit {
+            animation: standVanish 0.5s ease-in forwards;
+        }
+
+        /* ANIMATIONS */
+        @keyframes standSummon {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotate(-15deg);
+                filter: contrast(2) brightness(0);
+            }
+            50% {
+                filter: contrast(1.5) brightness(1.5); /* Flash */
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                filter: contrast(1) brightness(1);
+            }
+        }
+
+        @keyframes standVanish {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+                filter: blur(0px);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -60%) scale(1.1); /* Float up */
+                filter: blur(10px) grayscale(100%);
+            }
+        }
+
+        /* Rumble Animation for the text */
+        @keyframes rumble {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(-2px, 2px); }
+            50% { transform: translate(2px, -2px); }
+            75% { transform: translate(-2px, -2px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        .menacing-active {
+            animation: rumble 0.2s infinite linear;
+            opacity: 1;
         }
 
     </style>
@@ -377,7 +439,18 @@
     </div>
 </div>
 
-<img id="troll-img" src="troll.png" alt="Troll Face">
+<!-- TROLL VIDEO CONTAINER -->
+<div id="troll-container">
+    <!-- "Menacing" symbols positioned around the video -->
+    <div class="menacing-symbol" style="top: -40px; left: -20px;">ゴ</div>
+    <div class="menacing-symbol" style="top: 20%; left: -50px; font-size: 5rem;">ゴ</div>
+    <div class="menacing-symbol" style="bottom: -30px; right: -20px;">ゴ</div>
+    <div class="menacing-symbol" style="top: -20px; right: -40px; font-size: 3rem;">ゴ</div>
+    
+    <video id="troll-video" playsinline>
+        <source src="troll.mp4" type="video/mp4">
+    </video>
+</div>
 
 <script>
 
@@ -588,7 +661,7 @@
     
     CRITICAL RULE FOR TROLLS/FUNNY/WEIRD QUESTIONS:
     4. If the user asks something dumb, playful, trolling, or weird (e.g. "Can I fly?", "Where is the toilet for aliens?", "i want to go home"):
-       - Answer them humorously or sarcastically.
+       - Answer EXACTLY this: "Selina: DON'T PLAY PLAY AHH!"
        - YOU MUST END YOUR RESPONSE WITH THIS EXACT TAG: [[TROLL_DETECTED]]
        
     5. Compare with current Malaysia time when answering.
@@ -667,7 +740,7 @@
                 // 1. Remove the tag so the user doesn't see it text
                 reply = reply.replace('[[TROLL_DETECTED]]', '');
                 
-                // 2. Trigger the image animation
+                // 2. Trigger the video animation
                 triggerTroll();
             }
 
@@ -686,24 +759,52 @@
     }
 
     // =====================================================
-    // TROLL ANIMATION TRIGGER
+    // JOJO TROLL VIDEO TRIGGER
     // =====================================================
     function triggerTroll() {
-        const img = document.getElementById('troll-img');
+        const container = document.getElementById('troll-container');
+        const video = document.getElementById('troll-video');
+        const symbols = document.querySelectorAll('.menacing-symbol');
         
-        // 1. Reset (in case it was just used)
-        img.className = ''; 
+        // 1. Reset Classes & State
+        container.classList.remove('jojo-enter', 'jojo-exit');
+        void container.offsetWidth; // Force Reflow (Reset animation)
         
-        // 2. Make it pop up (Small delay to ensure reset happened)
-        requestAnimationFrame(() => {
-            img.classList.add('show');
-        });
+        // 2. Prepare Video
+        video.currentTime = 0;
+        video.muted = false; // Try unmuted first
+        
+        // 3. Trigger Entrance Animation
+        container.classList.add('jojo-enter');
 
-        // 3. Wait 2 seconds, then fly away
-        setTimeout(() => {
-            img.classList.remove('show');
-            img.classList.add('fly-away');
-        }, 2000); // Image stays on screen for 2 seconds
+        // 4. Activate Menacing Symbols
+        symbols.forEach(sym => sym.classList.add('menacing-active'));
+
+        // 5. Play Video
+        const playPromise = video.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                // If browser blocks unmuted audio, fallback to muted
+                console.log("Auto-play blocked, playing muted.");
+                video.muted = true;
+                video.play();
+            });
+        }
+
+        // 6. Handle Exit when video ends
+        video.onended = () => {
+            // Remove menacing effect
+            symbols.forEach(sym => sym.classList.remove('menacing-active'));
+            
+            // Trigger Exit Animation
+            container.classList.add('jojo-exit');
+            
+            // Cleanup classes after animation finishes (0.5s)
+            setTimeout(() => {
+                container.classList.remove('jojo-enter', 'jojo-exit');
+            }, 500); 
+        };
     }
 </script>
 
